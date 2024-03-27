@@ -85,6 +85,25 @@ class ContentModel {
         }
     }
 
+    async deleteContents(data) {
+        try {
+            await client.$connect()
+            const res = await client.siteContent.deleteMany({
+                where: {
+                    id: {
+                        in: data
+                    }
+                }
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            client.$disconnect()
+        }
+    }
+
     async updateContent(id, title, content) {
         try {
             await client.$connect()
@@ -103,6 +122,19 @@ class ContentModel {
         } catch (e) {
             console.error(e)
             await client.$disconnect()
+        }
+    }
+
+    async updateContents(data) {
+        try {
+            var res = []
+            data.forEach(cur => {
+                res.push(this.updateContent(parseInt(cur.id), cur.title, cur.content))
+            })
+
+            return res.length
+        } catch (e) {
+            console.error(e)
         }
     }
 }

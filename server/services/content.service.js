@@ -6,6 +6,10 @@ class ContentService {
         return await contentModel.getContentById(parseInt(id))
     }
 
+    async getContents() {
+        return await contentModel.getContents()
+    }
+
     async addContent(title, content) {
         return await contentModel.addContent(title, content)
     }
@@ -18,8 +22,20 @@ class ContentService {
         return await contentModel.deleteContent(parseInt(id))
     }
 
+    async deleteContents(data) {
+        var ids = []
+        data.forEach(id => {
+            ids.push(parseInt(id.id))
+        })
+        return await contentModel.deleteContents(ids)
+    }
+
     async updateContent(id, title, content) {
         return await contentModel.updateContent(parseInt(id), title, content)
+    }
+
+    async updateContents(data) {
+        return await contentModel.updateContents(data)
     }
 }
 
