@@ -1,4 +1,3 @@
-const { deleteContent } = require('../models/content.model')
 const contentService = require('../services/content.service')
 
 class ContentController {

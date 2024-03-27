@@ -35,7 +35,14 @@ model SiteContent {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  password String
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  hash String
+  salt String
+  role Role
+}
+
+enum Role {
+  USER
+  ADMIN
 }

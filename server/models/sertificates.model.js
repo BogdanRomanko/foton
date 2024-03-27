@@ -1,5 +1,5 @@
-import { Prisma, PrismaClient } from "@prisma/client"
-const client = new PrismaClient()
+const PrismaClient = require('@prisma/client')
+const client = new PrismaClient.PrismaClient()
 
 class SertificatesModel {
     

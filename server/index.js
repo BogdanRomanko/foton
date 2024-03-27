@@ -3,12 +3,14 @@ const app = express()
 const port = process.env.PORT
 const url = process.env.SITE_URL
 
+const userRouter = require('./routes/user.routes')
 const contentRouter = require('./routes/content.routes')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-app.use("/content", contentRouter)
+app.use('/user', userRouter)
+app.use('/content', contentRouter)
 
 app.get('/', (req, res) => {
   res.send('Home')

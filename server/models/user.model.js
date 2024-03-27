@@ -1,44 +1,64 @@
 const PrismaClient = require('@prisma/client')
 const client = new PrismaClient.PrismaClient()
 
-class CategoriesModel {
-    
-    async getAllCategories() {
+class UserModel {
+
+    async getUserById(id) {
         try {
             await client.$connect()
-            const categories = await client.productCategory.findMany()
-            await client.$disconnect()
-
-            return categories
-        } catch (e) {
-            console.error(e)
-            await client.$disconnect()
-        }
-    }
-
-    async getCategoryById(id) {
-        try {
-            await client.$connect()
-            const category = await client.productCategory.findUnique({
+            const res = await client.user.findUnique({
                 where: {
                     id: id
                 }
             })
             await client.$disconnect()
 
-            return category
+            return res
         } catch (e) {
             console.error(e)
             await client.$disconnect()
         }
     }
 
-    async addCategory(title) {
+    async getUserByName(name) {
         try {
             await client.$connect()
-            const res = await client.productCategory.create({
+            const res = await client.user.findUnique({
+                where: {
+                    name: name
+                }
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async getUsers() {
+        try {
+            await client.$connect()
+            const res = await client.user.findMany()
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async addUser(name, hash, salt, role) {
+        try {
+            await client.$connect()
+            const res = await client.user.create({
                 data: {
-                    title: title
+                    name: name,
+                    hash: hash,
+                    salt: salt,
+                    role: role
                 }
             })
             await client.$disconnect()
@@ -50,10 +70,10 @@ class CategoriesModel {
         }
     }
 
-    async deleteCategory(id) {
+    async deleteUser(id) {
         try {
             await client.$connect()
-            const res = await client.productCategory.delete({
+            const res = await client.user.delete({
                 where: {
                     id: id
                 }
@@ -67,15 +87,18 @@ class CategoriesModel {
         }
     }
 
-    async updateCategory(id, title) {
+    async updateUser(id, name, hash, salt, role) {
         try {
             await client.$connect()
-            const res = await client.productCategory.update({
+            const res = await client.user.update({
                 where: {
                     id: id
                 },
                 data: {
-                    title: title
+                    name: name,
+                    hash: hash,
+                    salt: salt,
+                    role: role
                 }
             })
             await client.$disconnect()
@@ -86,6 +109,7 @@ class CategoriesModel {
             await client.$disconnect()
         }
     }
+
 }
 
-module.exports = new CategoriesModel()
+module.exports = new UserModel()
