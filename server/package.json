@@ -1,0 +1,18 @@
+{
+    "name": "node-app",
+    "version": "1.0.0",
+    "description": "test docker for node.js",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon --env-file=.env -L index.js",
+        "start": "node --env-file=.env index.js"
+    },
+    "author": "Bogdan Romanko",
+    "license": "ISC",
+    "dependencies": {
+        "@prisma/client": "^5.11.0",
+        "env": "^0.0.2",
+        "express": "^4.19.2",
+        "prisma": "5.11.0"
+    }
+}
