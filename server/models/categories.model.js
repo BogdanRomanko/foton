@@ -33,6 +33,23 @@ class CategoriesModel {
         }
     }
 
+    async getCategoryByTitle(title) {
+        try {
+            await client.$connect()
+            const category = await client.productCategory.findUnique({
+                where: {
+                    title: title
+                }
+            })
+            await client.$disconnect()
+
+            return category
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async addCategory(title) {
         try {
             await client.$connect()
