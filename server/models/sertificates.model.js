@@ -33,7 +33,7 @@ class SertificatesModel {
         }
     }
 
-    async addSetrificate(title, image) {
+    async addSertificate(title, image) {
         try {
             await client.$connect()
             const res = await client.sertificates.create({
@@ -51,7 +51,23 @@ class SertificatesModel {
         }
     }
 
-    async deleteSertificate(id) {
+    async addSertificates(data) {
+        try {
+            await client.$connect()
+            const res = await client.sertificates.createMany({
+                data: data,
+                skipDuplicates: true
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async deleteSertificate(data) {
         try {
             await client.$connect()
             const res = await client.sertificates.delete({
@@ -62,6 +78,22 @@ class SertificatesModel {
             await client.$disconnect()
 
             return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async deleteSertificates(ids) {
+        try {
+            await client.$connect()
+            const res = await client.sertificates.deleteMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
+                }
+            })
         } catch (e) {
             console.error(e)
             await client.$disconnect()

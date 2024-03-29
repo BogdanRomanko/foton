@@ -58,7 +58,6 @@ class ContentModel {
                 data: data,
                 skipDuplicates: true
             })
-            console.log(data)
             await client.$disconnect()
 
             return res

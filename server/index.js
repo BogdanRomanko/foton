@@ -5,12 +5,14 @@ const url = process.env.SITE_URL
 
 const userRouter = require('./routes/user.routes')
 const contentRouter = require('./routes/content.routes')
+const sertificateRouter = require('./routes/sertificates.routes')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.use('/user', userRouter)
 app.use('/content', contentRouter)
+app.use('/sertificates', sertificateRouter)
 
 app.get('/', (req, res) => {
   res.send('Home')
