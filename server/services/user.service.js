@@ -30,7 +30,7 @@ class UserService {
         const salt = crypto.randomBytes(16).toString('hex')
         const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
 
-        return await userModel.updateUser(id, name, hash, salt, role)
+        return await userModel.updateUser(parseInt(id), name, hash, salt, role)
     }
 
 }

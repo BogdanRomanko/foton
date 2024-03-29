@@ -1,5 +1,5 @@
-const PrismaClient = require('@prisma/client')
-const client = new PrismaClient.PrismaClient()
+const PrismaClient = require('@prisma/client').PrismaClient
+const client = new PrismaClient()
 
 class UserModel {
 

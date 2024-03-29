@@ -1,5 +1,5 @@
-const PrismaClient = require('@prisma/client')
-const client = new PrismaClient.PrismaClient()
+const PrismaClient = require('@prisma/client').PrismaClient
+const client = new PrismaClient()
 
 class CategoriesModel {
     
@@ -50,12 +50,46 @@ class CategoriesModel {
         }
     }
 
+    async addCategories(data) {
+        try {
+            await client.$connect()
+            const res = await client.productCategory.createMany({
+                data: data
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async deleteCategory(id) {
         try {
             await client.$connect()
             const res = await client.productCategory.delete({
                 where: {
                     id: id
+                }
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async deleteCategories(ids) {
+        try {
+            await client.$connect()
+            const res = await client.productCategory.deleteMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
                 }
             })
             await client.$disconnect()

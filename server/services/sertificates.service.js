@@ -19,15 +19,19 @@ class SertificateService {
     }
 
     async deleteSertificate(id) {
-        return await sertificatesModel.deleteSertificate(id)
+        return await sertificatesModel.deleteSertificate(parseInt(id))
     }
 
-    async deleteSertificates(ids) {
+    async deleteSertificates(data) {
+        var ids = []
+        data.forEach(id => {
+            ids.push(parseInt(id.id))
+        })
         return await sertificatesModel.deleteSertificates(ids)
     }
 
     async updateSertificate(id, title, image) {
-        return await sertificatesModel.updateSertificate(id, title, image)
+        return await sertificatesModel.updateSertificate(parseInt(id), title, image)
     }
 }
 
