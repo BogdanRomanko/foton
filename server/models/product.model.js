@@ -33,8 +33,6 @@ class ProductModel {
         }
     }
 
-
-
     async addProduct(title, description, image, categoryId) {
         try {
             await client.$connect()
@@ -49,6 +47,19 @@ class ProductModel {
             await client.$disconnect()
 
             return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async addProducts(data) {
+        try {
+            await client.$connect()
+            const res = await client.products.createMany({
+                data: data
+            })
+            await client.$disconnect()
         } catch (e) {
             console.error(e)
             await client.$disconnect()
@@ -72,7 +83,26 @@ class ProductModel {
         }
     }
 
-    async updateProducts(id, title, description, image, categoryId) {
+    async deleteProducts(ids) {
+        try {
+            await client.$connect()
+            const res = await client.products.deleteMany({
+                where: {
+                    id: {
+                        in: ids
+                    }
+                }
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async updateProduct(id, title, description, image, categoryId) {
         try {
             await client.$connect()
             const res = await client.products.update({
