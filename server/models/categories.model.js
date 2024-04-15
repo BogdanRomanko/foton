@@ -99,13 +99,13 @@ class CategoriesModel {
         }
     }
 
-    async deleteCategories(ids) {
+    async deleteCategories(data) {
         try {
             await client.$connect()
             const res = await client.productCategory.deleteMany({
                 where: {
                     id: {
-                        in: ids
+                        in: data
                     }
                 }
             })

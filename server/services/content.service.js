@@ -6,8 +6,8 @@ class ContentService {
         return await contentModel.getContentById(parseInt(id))
     }
 
-    async getContents() {
-        return await contentModel.getContents()
+    async getAllContents() {
+        return await contentModel.getAllContent()
     }
 
     async addContent(title, content) {

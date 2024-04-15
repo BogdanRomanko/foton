@@ -11,8 +11,8 @@ class UserService {
         return await userModel.getUserByName(name)
     }
 
-    async getUsers() {
-        return await userModel.getUsers()
+    async getAllUsers() {
+        return await userModel.getAllUsers()
     }
 
     async createUser(name, password, role) {

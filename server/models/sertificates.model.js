@@ -67,7 +67,7 @@ class SertificatesModel {
         }
     }
 
-    async deleteSertificate(data) {
+    async deleteSertificate(id) {
         try {
             await client.$connect()
             const res = await client.sertificates.delete({
@@ -84,13 +84,13 @@ class SertificatesModel {
         }
     }
 
-    async deleteSertificates(ids) {
+    async deleteSertificates(data) {
         try {
             await client.$connect()
             const res = await client.sertificates.deleteMany({
                 where: {
                     id: {
-                        in: ids
+                        in: data
                     }
                 }
             })

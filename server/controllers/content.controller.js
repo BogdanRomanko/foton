@@ -13,7 +13,7 @@ class ContentController {
 
     async getContents(req, res, next) {
         try {
-            const data = await contentService.getContents()
+            const data = await contentService.getAllContents()
             res.json(data)
         } catch (e) {
             next(e)

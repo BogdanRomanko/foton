@@ -3,6 +3,19 @@ const client = new PrismaClient()
 
 class UserModel {
 
+    async getAllUsers() {
+        try {
+            await client.$connect()
+            const res = await client.user.findMany()
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async getUserById(id) {
         try {
             await client.$connect()
@@ -28,19 +41,6 @@ class UserModel {
                     name: name
                 }
             })
-            await client.$disconnect()
-
-            return res
-        } catch (e) {
-            console.error(e)
-            await client.$disconnect()
-        }
-    }
-
-    async getUsers() {
-        try {
-            await client.$connect()
-            const res = await client.user.findMany()
             await client.$disconnect()
 
             return res

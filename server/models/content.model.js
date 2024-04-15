@@ -3,6 +3,19 @@ const client = new PrismaClient()
 
 class ContentModel {
 
+    async getAllContent() {
+        try {
+            await client.$connect()
+            const contents = await client.siteContent.findMany()
+            await client.$disconnect()
+
+            return contents
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async getContentById(id) {
         try {
             await client.$connect()
@@ -14,19 +27,6 @@ class ContentModel {
             await client.$disconnect()
 
             return content
-        } catch (e) {
-            console.error(e)
-            await client.$disconnect()
-        }
-    }
-
-    async getContents() {
-        try {
-            await client.$connect()
-            const contents = await client.siteContent.findMany()
-            await client.$disconnect()
-
-            return contents
         } catch (e) {
             console.error(e)
             await client.$disconnect()
