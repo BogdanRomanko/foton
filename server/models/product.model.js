@@ -54,6 +54,42 @@ class ProductModel {
         }
     }
 
+    async getProductsByCategory(categoryId) {
+        try {
+            await client.$connect()
+            const products = await client.products.findMany({
+                where: {
+                    categoryId: categoryId
+                }
+            })
+            await client.$disconnect()
+
+            return products
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async getProductsByTitle(title) {
+        try {
+            await client.$connect()
+            const product = await client.products.findMany({
+                where: {
+                    title: {
+                        contains: title
+                    }
+                }
+            })
+            await client.$disconnect()
+
+            return product
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async addProduct(title, description, image, categoryId) {
         try {
             await client.$connect()

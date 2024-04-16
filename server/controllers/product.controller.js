@@ -29,6 +29,24 @@ class ProductController {
         }
     }
 
+    async getProductsByCategory(req, res, next) {
+        try {
+            const data = await productService.getProductsByCategory(req.query.categoryId)
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getProductsByTitle(req, res, next) {
+        try {
+            const data = await productService.getProductsByTitle(req.query.title)
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
     async addProduct(req, res, next) {
         try {
             const data = await productService.addProduct(

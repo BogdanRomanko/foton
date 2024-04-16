@@ -5,6 +5,8 @@ const router = new Router()
 router.get('/get', productController.getProductById)
 router.get('/getAll', productController.getProducts)
 router.get('/getByPage', productController.getProductsByPage)
+router.get('/getByCategory', productController.getProductsByCategory)
+router.get('/getByTitle', productController.getProductsByTitle)
 
 router.post('/create', productController.addProduct)
 router.post('/createMany', productController.addProducts)
