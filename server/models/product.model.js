@@ -33,6 +33,27 @@ class ProductModel {
         }
     }
 
+    async getProductsByPage(page) {
+        try {
+            await client.$connect()
+            const products = await client.products.findMany({
+                skip: page * 10,
+                take: 10
+            })
+
+            const res = []
+            res.push({products: products})
+            res.push({count: await client.products.count()})
+
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async addProduct(title, description, image, categoryId) {
         try {
             await client.$connect()

@@ -40,7 +40,7 @@ class CategoriesController {
 
     async deleteCategory(req, res, next) {
         try {
-            const data = await categoriesService.deleteCategories(req.query.id)
+            const data = await categoriesService.deleteCategory(req.query.id)
             res.json(data)
         } catch (e) {
             next(e)

@@ -20,6 +20,15 @@ class ProductController {
         }
     }
 
+    async getProductsByPage(req, res, next) {
+        try {
+            const data = await productService.getProductsByPage(req.query.page)
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
     async addProduct(req, res, next) {
         try {
             const data = await productService.addProduct(

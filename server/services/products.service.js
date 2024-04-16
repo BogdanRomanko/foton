@@ -11,6 +11,10 @@ class ProductService {
         return await productModel.getAllProducts()
     }
 
+    async getProductsByPage(page) {
+        return await productModel.getProductsByPage(parseInt(page))
+    }
+
     async addProduct(title, description, image, categoryId) {
         return await productModel.addProduct(title, description, image, parseInt(categoryId))
     }

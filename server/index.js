@@ -16,7 +16,7 @@ app.use('/user', userRouter)
 app.use('/content', contentRouter)
 app.use('/sertificates', sertificateRouter)
 app.use('/categories', categoriesRouter)
-app.use('/product', productRouter)
+app.use('/products', productRouter)
 
 app.get('/', (req, res) => {
   res.send('Home')
