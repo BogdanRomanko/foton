@@ -102,6 +102,15 @@ class ProductController {
             next(e)
         }
     }
+
+    async updateProducts(req, res, next) {
+        try {
+            const data = await productService.updateProducts(req.body.data)
+            res.json(data)
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 
 module.exports = new ProductController()

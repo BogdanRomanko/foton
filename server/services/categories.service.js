@@ -33,6 +33,10 @@ class CategoriesService {
     async updateCategory(id, title) {
         return await categoryModel.updateCategory(parseInt(id), title)
     }
+
+    async updateCategories(data) {
+        return await categoryModel.updateCategories(data)
+    }
 }
 
 module.exports = new CategoriesService()

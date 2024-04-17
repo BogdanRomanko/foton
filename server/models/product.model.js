@@ -181,6 +181,19 @@ class ProductModel {
             await client.$disconnect()
         }
     }
+
+    async updateProducts(data) {
+        try {
+            var res = []
+            data.forEach(cur => {
+                res.push(this.updateProduct(parseInt(cur.id), cur.title, cur.description, cur.image, cur.categoryId))
+            })
+
+            return res.length
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 
 module.exports = new ProductModel()

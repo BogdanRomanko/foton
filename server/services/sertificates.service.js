@@ -33,6 +33,10 @@ class SertificateService {
     async updateSertificate(id, title, image) {
         return await sertificatesModel.updateSertificate(parseInt(id), title, image)
     }
+
+    async updateSertificates(data) {
+        return await sertificatesModel.updateSertificates(data)
+    }
 }
 
 module.exports = new SertificateService()

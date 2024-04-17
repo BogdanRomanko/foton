@@ -12,5 +12,6 @@ router.delete('/delete', categoriesController.deleteCategory)
 router.delete('/deleteMany', categoriesController.deleteCategories)
 
 router.put('/update', categoriesController.updateCategory)
+router.put('/updateMany', categoriesController.updateCategories)
 
 module.exports = router

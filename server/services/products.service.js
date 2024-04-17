@@ -46,6 +46,10 @@ class ProductService {
     async updateProduct(id, title, description, image, categoryId) {
         return await productModel.updateProduct(parseInt(id), title, description, image, categoryId)
     }
+
+    async updateProducts(data) {
+        return await productModel.updateProducts(data)
+    }
 }
 
 module.exports = new ProductService()

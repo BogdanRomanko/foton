@@ -8,7 +8,8 @@ router.get('/get', sertificateController.getSertificateById)
 router.post('/create', sertificateController.addSertificate)
 router.post('/createMany', sertificateController.addSertificates)
 
-router.put('/update', sertificateController.updateContent)
+router.put('/update', sertificateController.updateSertificate)
+router.put('/updateMany', sertificateController.updateSertificates)
 
 router.delete('/delete', sertificateController.deleteSErtificate)
 router.delete('/deleteMany', sertificateController.deleteSertificates)

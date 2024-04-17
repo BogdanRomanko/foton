@@ -15,5 +15,6 @@ router.delete('/delete', productController.deleteProduct)
 router.delete('/deleteMany', productController.deleteProducts)
 
 router.put('/update', productController.updateProduct)
+router.put('/updateMany', productController.updateProducts)
 
 module.exports = router

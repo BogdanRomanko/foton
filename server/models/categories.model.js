@@ -137,6 +137,19 @@ class CategoriesModel {
             await client.$disconnect()
         }
     }
+
+    async updateCategories(data) {
+        try {
+            var res = []
+            data.forEach(cur => {
+                res.push(this.updateCategory(parseInt(cur.id), cur.title, cur.content))
+            })
+
+            return res.length
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 
 module.exports = new CategoriesModel()

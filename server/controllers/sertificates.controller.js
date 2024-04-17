@@ -65,12 +65,21 @@ class SertificateController {
         }
     }
 
-    async updateContent(req, res, next) {
+    async updateSertificate(req, res, next) {
         try {
             const data = await sertificateService.updateSertificate(req.body.id, req.body.title, req.body.image)
             res.json(data)
         } catch (e) {
             next(e)
+        }
+    }
+
+    async updateSertificates(req, res, next) {
+        try {
+            const data = await sertificateService.updateSertificates(req.body.data)
+            res.json(data)
+        } catch (e) {
+            console.error(e)
         }
     }
 

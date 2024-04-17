@@ -64,6 +64,15 @@ class CategoriesController {
             next(e)
         }
     }
+
+    async updateCategories(req, res, next) {
+        try {
+            const data = await categoriesService.updateCategories(req.body.data)
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 module.exports = new CategoriesController()

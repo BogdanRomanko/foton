@@ -120,6 +120,19 @@ class SertificatesModel {
             await client.$disconnect()
         }
     }
+
+    async updateSertificates(data) {
+        try {
+            var res = []
+            data.forEach(cur => {
+                res.push(this.updateSertificate(parseInt(cur.id), cur.title, cur.image))
+            })
+
+            return res.length
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 
 module.exports = new SertificatesModel()
