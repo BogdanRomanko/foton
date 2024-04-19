@@ -30,9 +30,9 @@ class UserController {
         }
     }
 
-    async createUser(req, res, next) {
+    async registration(req, res, next) {
         try {
-            const data = await userService.createUser(req.body.name, req.body.password, req.body.role)
+            const data = await userService.registration(req.body.name, req.body.password, req.body.role)
             res.json(data)
         } catch (e) {
             next(e)

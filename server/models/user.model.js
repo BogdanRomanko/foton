@@ -50,7 +50,7 @@ class UserModel {
         }
     }
 
-    async addUser(name, hash, salt, role) {
+    async registration(name, hash, salt, role) {
         try {
             await client.$connect()
             const res = await client.user.create({
