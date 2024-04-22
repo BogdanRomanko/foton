@@ -1,9 +1,20 @@
 const contentService = require('../services/content.service')
+const apiError = require('../exceptions/server.error')
+const Joi = require('joi')
+
 
 class ContentController {
 
     async getContentById(req, res, next) {
         try {
+            const schema = Joi.object({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.getContentById(req.query.id)
             res.json(data)
         } catch (e) {
@@ -22,6 +33,15 @@ class ContentController {
 
     async addContent(req, res, next) {
         try {
+            const schema = Joi.object({
+                title: Joi.string().required(),
+                content: Joi.string().required()
+            })
+            const {error} = schema.validate(req.body)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.addContent(req.body.title, req.body.content)
             res.json(data)
         } catch (e) {
@@ -31,6 +51,15 @@ class ContentController {
 
     async addContents(req, res, next) {
         try {
+            const schema = Joi.array().items({
+                title: Joi.string().required(),
+                content: Joi.string().required()
+            })
+            const {error} = schema.validate(req.body.data)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.addContents(req.body.data)
             res.json(data)
         } catch (e) {
@@ -40,6 +69,14 @@ class ContentController {
 
     async deleteContent(req, res, next) {
         try {
+            const schema = Joi.object({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.deleteContent(req.query.id)
             res.json(data)
         } catch (e) {
@@ -49,6 +86,14 @@ class ContentController {
 
     async deleteContents(req, res, next) {
         try {
+            const schema = Joi.array().items({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.body.data)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.deleteContents(req.body.data)
             res.json(data)
         } catch (e) {
@@ -58,6 +103,16 @@ class ContentController {
 
     async updateContent(req, res, next) {
         try {
+            const schema = Joi.object({
+                id: Joi.number().required(),
+                title: Joi.string().required(),
+                content: Joi.string().required()
+            })
+            const {error} = schema.validate(req.body)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.updateContent(req.body.id, req.body.title, req.body.content)
             res.json(data)
         } catch (e) {
@@ -67,6 +122,16 @@ class ContentController {
 
     async updateContents(req, res, next) {
         try {
+            const schema = Joi.array().items({
+                id: Joi.number().required(),
+                title: Joi.string().required(),
+                content: Joi.string().required()
+            })
+            const {error} = schema.validate(req.body.data)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
             const data = await contentService.updateContents(req.body.data)
             res.json(data)
         } catch (e) {

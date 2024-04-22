@@ -42,6 +42,8 @@ class UserService {
             if (user.hash === hashPassword.hash) {
                 const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
                 await tokenService.saveToken(user.id, tokens.refreshToken)
+                
+                return tokens
             } else
                 throw new apiError(404, "Password not valid")
         } catch (e) {
@@ -61,6 +63,7 @@ class UserService {
 
         const user = await userModel.getUserById(userData.id)
         const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
+        
         return tokens
     }
 
@@ -69,6 +72,7 @@ class UserService {
             throw apiError.UnauthorizedError()
 
         await tokenService.removeToken(token)
+        
         return true
     }
 
@@ -112,6 +116,7 @@ class UserService {
     hashPassword(password) {
         const salt = crypto.randomBytes(16).toString('hex')
         const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
+        
         return {hash, salt}
     }
 

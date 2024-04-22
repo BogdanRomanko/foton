@@ -8,6 +8,10 @@ module.exports = class ApiError extends Error {
         this.errors = errors;
     }
 
+    static HttpException(message) {
+        return new ApiError(400, message)
+    }
+
     static ForbiddenError() {
         return new ApiError(403, 'Access denied')
     }

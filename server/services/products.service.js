@@ -1,5 +1,4 @@
 const productModel = require('../models/product.model')
-const categoryModel = require('../models/categories.model')
 
 class ProductService {
 
