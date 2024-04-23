@@ -13,6 +13,37 @@ services:
     depends_on:
       - server
   
+  gateway:
+    image: php:7.2-apache
+    ports:
+      - "8081:80"
+    volumes:
+      - ./client/gateway:/var/www/html
+    networks:
+      - app-network
+
+  sub:
+    image: php:7.2-apache
+    volumes:
+      - ./client/sub:/var/www/html
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./wwwroot/nginx.conf:/etc/nginx/nginx.conf
+      - ./wwwroot/ssl:/etc/nginx/ssl
+    depends_on:
+      - gateway
+      - sub
+    networks:
+      - app-network
+
   database:
     image: postgres:alpine3.19
     container_name: db
@@ -41,30 +72,10 @@ services:
     networks:
       - postgres
 
-  apgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:8.4
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=bromankoya@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=password
-      - PGADMIN_CONFIG_SERVER_MODE=False
-    ports:
-      - "5050:80"
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
-    networks:
-      - postgres
-
 volumes:
   foton-data:
-  pgadmin-data:
 
 networks:
   postgres:
     driver: bridge
+  app-network:

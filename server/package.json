@@ -1,11 +1,11 @@
 {
-    "name": "node-app",
+    "name": "foton-backend",
     "version": "1.0.0",
-    "description": "test docker for node.js",
+    "description": "foton app in nodejs",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --env-file=.env -L index.js",
-        "start": "node --env-file=.env index.js"
+        "dev": "nodemon --env-file='.env' -L index.js",
+        "start": "node --env-file='.env' -L index.js"
     },
     "author": "Bogdan Romanko",
     "license": "ISC",
