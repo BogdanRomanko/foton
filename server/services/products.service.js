@@ -2,7 +2,7 @@ const productModel = require('../models/product.model')
 
 class ProductService {
 
-    async getProduct(id) {
+    async getProductById(id) {
         return await productModel.getProductById(parseInt(id))
     }
 
@@ -31,14 +31,27 @@ class ProductService {
     }
 
     async deleteProduct(id) {
+        const product = await this.getProductById(parseInt(id))
+        await this.deleteImage(product.image)
+
         return await productModel.deleteProduct(parseInt(id))
     }
 
     async deleteProducts(data) {
-        var ids = []
-        data.forEach(id => {
-            ids.push(parseInt(id.id))
+        const ids = []
+        const paths = []
+
+        data.forEach(item => {
+            ids.push(parseInt(item.id))
         })
+
+        for (let i = 0; i < ids.length; i++) {
+            const sert = await this.getProductById(ids[i])
+            paths.push(sert.sertificateImage)
+        }
+
+        await this.deleteImages(paths)
+
         return await productModel.deleteProducts(ids)
     }
 
@@ -48,6 +61,27 @@ class ProductService {
 
     async updateProducts(data) {
         return await productModel.updateProducts(data)
+    }
+
+    async deleteImage(imagePath) {
+        if (imagePath != null)
+            if (fs.existsSync(Path.join("../server", imagePath)))
+                fs.rm(Path.join("../server", imagePath), (err) => {
+                    if (err)
+                        console.log(err)
+                })
+    }
+
+    async deleteImages(imagePaths) {
+        imagePaths.forEach(imagePath => {
+            if (imagePath != null) {
+                if (fs.existsSync(Path.join("../server", imagePath)))
+                    fs.rm(Path.join("../server", imagePath), (err) => {
+                        if (err)
+                            console.log(err)
+                    })
+            }
+        })
     }
 }
 

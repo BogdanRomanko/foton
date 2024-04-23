@@ -34,14 +34,14 @@ class SertificateController {
         try {
             const schema = Joi.object({
                 title: Joi.string().required(),
-                image: Joi.string().required()
+                image: Joi.any().meta({swaggerType: 'file'}).optional()
             })
             const {error} = schema.validate(req.body)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
             
-            const data = await sertificateService.addSertificate(req.body.title, req.body.image)
+            const data = await sertificateService.addSertificate(req.body.title, req.file.path)
             res.json(data)
         } catch (e) {
             next(e)
@@ -93,7 +93,7 @@ class SertificateController {
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await sertificateService.deleteSertificate(req.body.data)
+            const data = await sertificateService.deleteSertificates(req.body.data)
             res.json(data)
         } catch (e) {
             next(e)
@@ -105,14 +105,14 @@ class SertificateController {
             const schema = Joi.object({
                 id: Joi.number().required(),
                 title: Joi.string().required(),
-                image: Joi.string().required()
+                image: Joi.any().meta({swaggerType: 'file'}).optional()
             })
             const {error} = schema.validate(req.body)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-
-            const data = await sertificateService.updateSertificate(req.body.id, req.body.title, req.body.image)
+            
+            const data = await sertificateService.updateSertificate(req.body.id, req.body.title, req.file.path)
             res.json(data)
         } catch (e) {
             next(e)

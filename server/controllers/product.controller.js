@@ -14,7 +14,7 @@ class ProductController {
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await productService.getProduct(req.query.id)
+            const data = await productService.getProductById(req.query.id)
             res.json(data)
         } catch (e) {
             next(e)
@@ -86,7 +86,7 @@ class ProductController {
             const schema = Joi.object({
                 title: Joi.string().required(),
                 description: Joi.string().required(),
-                image: Joi.string().required(),
+                image: Joi.any().meta({swaggerType: 'file'}).optional(),
                 categoryId: Joi.number().required()
             })
             const {error} = schema.validate(req.body)
@@ -97,7 +97,7 @@ class ProductController {
             const data = await productService.addProduct(
                 req.body.title,
                 req.body.description,
-                req.body.image,
+                req.file.path,
                 req.body.categoryId
                 )
             res.json(data)
@@ -166,7 +166,7 @@ class ProductController {
                 id: Joi.number().required(),
                 title: Joi.string().required(),
                 description: Joi.string().required(),
-                image: Joi.string().required(),
+                image: Joi.any().meta({swaggerType: 'file'}).optional(),
                 categoryId: Joi.number().required()
             })
             const {error} = schema.validate(req.body)
@@ -178,7 +178,7 @@ class ProductController {
                 req.body.id, 
                 req.body.title, 
                 req.body.description,
-                req.body.image,
+                req.file.path,
                 req.body.categoryId
                 )
             res.json(data)

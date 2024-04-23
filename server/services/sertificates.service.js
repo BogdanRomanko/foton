@@ -1,4 +1,6 @@
 const sertificatesModel = require('../models/sertificates.model')
+const fs = require('fs')
+const Path = require('path')
 
 class SertificateService {
 
@@ -19,14 +21,27 @@ class SertificateService {
     }
 
     async deleteSertificate(id) {
+        const sertificate = await this.getSertificateById(parseInt(id))
+        await this.deleteImage(sertificate.sertificateImage)
+
         return await sertificatesModel.deleteSertificate(parseInt(id))
     }
 
     async deleteSertificates(data) {
-        var ids = []
-        data.forEach(id => {
-            ids.push(parseInt(id.id))
+        const ids = []
+        const paths = []
+
+        data.forEach(item => {
+            ids.push(parseInt(item.id))
         })
+
+        for (let i = 0; i < ids.length; i++) {
+            const sert = await this.getSertificateById(ids[i])
+            paths.push(sert.sertificateImage)
+        }
+
+        await this.deleteImages(paths)
+
         return await sertificatesModel.deleteSertificates(ids)
     }
 
@@ -36,6 +51,27 @@ class SertificateService {
 
     async updateSertificates(data) {
         return await sertificatesModel.updateSertificates(data)
+    }
+
+    async deleteImage(imagePath) {
+        if (imagePath != null)
+            if (fs.existsSync(Path.join("../server", imagePath)))
+                fs.rm(Path.join("../server", imagePath), (err) => {
+                    if (err)
+                        console.log(err)
+                })
+    }
+
+    async deleteImages(imagePaths) {
+        imagePaths.forEach(imagePath => {
+            if (imagePath != null) {
+                if (fs.existsSync(Path.join("../server", imagePath)))
+                    fs.rm(Path.join("../server", imagePath), (err) => {
+                        if (err)
+                            console.log(err)
+                    })
+            }
+        })
     }
 }
 
