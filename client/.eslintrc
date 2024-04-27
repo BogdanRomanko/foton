@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+  },
+  "extends": [
+    "@nuxtjs/eslint-config-typescript",
+    "plugin:prettier/recommended",
+    "plugin:vue/vue3-recommended"
+  ],
+  "rules": {
+    "vue/script-setup-uses-vars": "error",
+    "vue/multi-word-component-names": "off",
+    "vue/html-self-closing": "off",
+    "vue/no-multiple-template-root": "off",
+    "vue/singleline-html-element-content-newline": "off"
+  },
+  "overrides": []
+}
