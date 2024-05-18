@@ -1,6 +1,6 @@
 export default defineAppConfig({
   ui: {
-    primary: "orange",
+    primary: "slate",
     input: {
       file: {
         padding: {

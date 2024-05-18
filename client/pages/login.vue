@@ -3,15 +3,15 @@ import { object, string, type InferType } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
 const state = reactive({
-  email: "hello@nhatduyet.me",
-  password: "NhatDuyet@JSON*2023#",
+  login: "",
+  password: "",
 })
 
 const schema = object().shape({
-  email: string().email("Invalid email").required("Required"),
+  login: string().required("Имя пользователя - обязательное поле"),
   password: string()
-    .min(8, "Must be at least 8 characters")
-    .required("Required"),
+    .min(8, "Пароль должен быть минимум 8 символов")
+    .required("Пароль - обязательное поле"),
 })
 
 type Schema = InferType<typeof schema>
@@ -19,39 +19,86 @@ type Schema = InferType<typeof schema>
 const authStore = useAuthStore()
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
-  authStore.login(event.data)
+  // authStore.login(event.data)
+  console.log(event.data)
 }
 </script>
 <template>
   <h1 v-if="authStore.isLoading">is loading...</h1>
   <p v-if="authStore.error" class="text-red-600">{{ authStore.error }}</p>
-  <div class="w-4/5 mx-auto">
-    <UForm
-      :schema="schema"
-      :state="state"
-      class="space-y-4 form p-7"
-      @submit="onSubmit"
-    >
-      <UFormGroup label="Email" name="email">
-        <UInput v-model="state.email" color="white" />
-      </UFormGroup>
 
-      <UFormGroup label="Password" name="password">
-        <UInput
-          v-model="state.password"
-          type="password"
-          class="input"
-          placeholder="test"
-        />
-      </UFormGroup>
-
-      <UButton type="submit"> Login </UButton>
-    </UForm>
+  <div class="login">
+    <div class="login-content">
+      <h3>Авторизация</h3>
+      <UForm :schema="schema" :state="state" @submit="onSubmit">
+        <UFormGroup label="Введите имя пользователя" name="login">
+          <UInput v-model="state.login" placeholder="Имя пользователя" />
+        </UFormGroup>
+        <UFormGroup label="Введите пароль" name="password">
+          <UInput
+            v-model="state.password"
+            type="password"
+            placeholder="Пароль от аккаунта"
+          />
+        </UFormGroup>
+        <UButton type="submit"> Вход </UButton>
+      </UForm>
+    </div>
   </div>
 </template>
 
-<style scoped lang="scss">
-.form {
-  background-color: rgb(var(--color-gray-700));
+<style lang="scss">
+.login {
+  flex-grow: 1;
+
+  &-content {
+    width: 40%;
+    margin: 10px auto;
+
+    h3 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      input {
+        border-color: red;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #0420aa;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      button:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 720px) {
+    &-content {
+      width: 80%;
+    }
+  }
 }
 </style>
