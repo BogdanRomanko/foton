@@ -15,6 +15,8 @@ export const useCategoryStore = defineStore("category", () => {
   }
 
   async function fetch() {
+    if (data.length) return
+
     isLoading.value = true
 
     try {

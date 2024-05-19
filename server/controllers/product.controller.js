@@ -39,7 +39,7 @@ class ProductController {
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-            
+
             const data = await productService.getProductsByPage(req.query.page)
             res.json(data)
         } catch (e) {
@@ -56,7 +56,7 @@ class ProductController {
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-            
+
             const data = await productService.getProductsByCategory(req.query.categoryId)
             res.json(data)
         } catch (e) {
@@ -73,7 +73,7 @@ class ProductController {
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-            
+
             const data = await productService.getProductsByTitle(req.query.title)
             res.json(data)
         } catch (e) {
@@ -93,7 +93,9 @@ class ProductController {
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-            
+
+            console.log(req.body)
+
             const data = await productService.addProduct(
                 req.body.title,
                 req.body.description,
@@ -135,7 +137,7 @@ class ProductController {
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-            
+
             const data = await productService.deleteProduct(req.query.id)
             res.json(data)
         } catch (e) {
@@ -152,7 +154,7 @@ class ProductController {
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-            
+
             const data = await productService.deleteProducts(req.body.data)
             res.json(data)
         } catch (e) {
@@ -175,8 +177,8 @@ class ProductController {
                 throw apiError.HttpException(error.details[0].message)
 
             const data = await productService.updateProduct(
-                req.body.id, 
-                req.body.title, 
+                req.body.id,
+                req.body.title,
                 req.body.description,
                 req.file.path,
                 req.body.categoryId

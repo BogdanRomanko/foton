@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const categoryStore = useCategoryStore()
 
-useAsyncData("categories", () => categoryStore.fetch())
+useAsyncData(() => categoryStore.fetch())
 
 onUnmounted(() => {
   categoryStore.$reset()

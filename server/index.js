@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT
 const url = process.env.SITE_URL
+const path = require('path')
 
 const cors = require('cors')
 const userRouter = require('./routes/user.routes')
@@ -23,7 +24,7 @@ app.use('/content', contentRouter)
 app.use('/sertificates', sertificateRouter)
 app.use('/categories', categoriesRouter)
 app.use('/products', productRouter)
-
+app.use('/image',express.static(path.join(__dirname, 'static')))
 app.get('/', (req, res) => {
   res.send('Home')
 });

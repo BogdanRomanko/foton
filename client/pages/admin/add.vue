@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { object, string, type InferType, mixed, array } from "yup"
+import { object, string, type InferType, mixed, number } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
 definePageMeta({
@@ -7,62 +7,45 @@ definePageMeta({
   middleware: "protect-by-auth",
 })
 
+const productStore = useProductStore()
+const categoryStore = useCategoryStore()
+
+const fileRef = ref()
+
+useAsyncData(() => categoryStore.fetch())
+
 const state = reactive({
-  email: null,
-  password: null,
-  file: null,
-  category: [],
-  type: null,
+  title: null,
+  description: null,
+  image: null,
+  categoryId: null,
 })
 
 const schema = object().shape({
-  email: string().email("Invalid email").required("Required"),
-  password: string()
+  title: string().required("Required"),
+  description: string()
     .min(8, "Must be at least 8 characters")
     .required("Required"),
-  file: mixed()
+  image: mixed()
     .required("required")
-    .test("fileFormat", "Only PDF files are allowed", (value: any) => {
-      const supportedFormats = ["pdf"]
+    .test("fileFormat", "Only support files are allowed", (value: any) => {
+      const supportedFormats = ["jpeg", "jpg", "png", "gif", "svg"]
       const e = value.split(".")
 
       if (!e) return false
 
       return supportedFormats.includes(e.at(-1))
     }),
-  category: array().required().min(1, "select category"),
-  type: string().required(),
+  categoryId: number().required().min(1, "select category"),
 })
 
 type Schema = InferType<typeof schema>
 
-const options = [
-  {
-    value: "email",
-    label: "Email",
-  },
-  {
-    value: "sms",
-    label: "Phone (SMS)",
-  },
-  {
-    value: "push",
-    label: "Push notification",
-  },
-]
-
-const { data: categories } = await useFetch(
-  "https://api.fakestorejson.com/api/v1/public/product-categories",
-  {
-    transform: (value: any) => {
-      if (!value || !value.data) return []
-      return value.data.map((item: any) => item.name)
-    },
-  },
-)
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  await console.log(event.data)
+function onSubmit(event: FormSubmitEvent<Schema>) {
+  productStore.add({
+    ...event.data,
+    image: fileRef.value.input.files[0],
+  })
 }
 </script>
 
@@ -74,52 +57,36 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       class="space-y-4 form p-7"
       @submit="onSubmit"
     >
-      <UFormGroup label="Email" name="email">
-        <UInput v-model="state.email" color="white" />
+      <UFormGroup label="Заголовок" name="title">
+        <UInput v-model="state.title" color="white" />
       </UFormGroup>
 
-      <UFormGroup label="file" name="file">
+      <UFormGroup label="Описание" name="description">
+        <UTextarea v-model="state.description" />
+      </UFormGroup>
+
+      <UFormGroup label="Лого" name="image">
         <UInput
-          v-model="state.file"
+          ref="fileRef"
+          v-model="state.image"
           type="file"
           color="white"
-          accept=".pdf,.doc,.docx"
+          accept=".jpeg, .jpg, .png, .gif, .svg"
         />
       </UFormGroup>
 
-      <UFormGroup label="Password" name="password">
-        <UInput
-          v-model="state.password"
-          type="password"
-          class="input"
-          placeholder="test"
-        />
-      </UFormGroup>
-
-      <UFormGroup label="Category" name="category">
+      <UFormGroup label="Category" name="categoryId">
         <USelectMenu
-          v-model="state.category"
-          :options="categories"
+          v-model="state.categoryId"
+          :options="categoryStore.data"
           placeholder="Select categories"
-          multiple
+          value-attribute="id"
+          option-attribute="title"
         />
       </UFormGroup>
-      <UFormGroup label="Type" name="type">
-        <URadioGroup
-          v-model="state.type"
-          legend="Choose type"
-          :options="options"
-        />
-      </UFormGroup>
-
       <UButton type="submit"> Submit </UButton>
     </UForm>
   </div>
-  <AdminPostEditor />
 </template>
 
-<style scoped lang="scss">
-.form {
-  background-color: rgb(var(--color-gray-700));
-}
-</style>
+<style scoped lang="scss"></style>
