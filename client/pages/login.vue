@@ -3,12 +3,12 @@ import { object, string, type InferType } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
 
 const state = reactive({
-  login: "",
+  name: "",
   password: "",
 })
 
 const schema = object().shape({
-  login: string().required("Имя пользователя - обязательное поле"),
+  name: string().required("Имя пользователя - обязательное поле"),
   password: string()
     .min(8, "Пароль должен быть минимум 8 символов")
     .required("Пароль - обязательное поле"),
@@ -19,8 +19,8 @@ type Schema = InferType<typeof schema>
 const authStore = useAuthStore()
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
-  // authStore.login(event.data)
   console.log(event.data)
+  authStore.login(event.data)
 }
 </script>
 <template>
@@ -31,8 +31,8 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
     <div class="login-content">
       <h3>Авторизация</h3>
       <UForm :schema="schema" :state="state" @submit="onSubmit">
-        <UFormGroup label="Введите имя пользователя" name="login">
-          <UInput v-model="state.login" placeholder="Имя пользователя" />
+        <UFormGroup label="Введите имя пользователя" name="name">
+          <UInput v-model="state.name" placeholder="Имя пользователя" />
         </UFormGroup>
         <UFormGroup label="Введите пароль" name="password">
           <UInput

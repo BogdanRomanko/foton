@@ -52,6 +52,7 @@ class UserModel {
 
     async registration(name, hash, salt, role) {
         try {
+            console.log(name, hash, salt, role)
             await client.$connect()
             const res = await client.user.create({
                 data: {

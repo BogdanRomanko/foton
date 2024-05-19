@@ -3,11 +3,17 @@ const app = express()
 const port = process.env.PORT
 const url = process.env.SITE_URL
 
+const cors = require('cors')
 const userRouter = require('./routes/user.routes')
 const contentRouter = require('./routes/content.routes')
 const sertificateRouter = require('./routes/sertificates.routes')
 const categoriesRouter = require('./routes/categories.routes')
 const productRouter = require('./routes/product.routes')
+
+app.use( cors({
+  credentials: true,
+  origin: process.env.CLIENT_URL,
+}),)
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

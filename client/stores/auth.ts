@@ -1,47 +1,47 @@
 interface IAuthUser {
-  email: string
+  name: string
   password: string
+}
+
+interface IAuthRes {
+  accessToken: string
+  refreshToken: string
 }
 
 export const useAuthStore = defineStore("auth", () => {
   const loadingIndicator = useLoadingIndicator()
   const router = useRouter()
 
-  const accessToken = useCookie("token")
-  const refreshToken = useLocalStorage("token", "")
+  const refreshToken = useCookie("JWTRefreshToken")
 
   const userStore = useUserStore()
 
   const isLoading = ref(false)
-  const token = ref("")
   const error = ref("")
+
+  const isAuth = ref(false)
 
   async function login(userData: IAuthUser) {
     try {
+      error.value = ""
       isLoading.value = true
       loadingIndicator.start()
-      const res = await $fetch<any>(
-        "https://api.fakestorejson.com/api/v1/auth/login",
-        {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: userData.email,
-            password: userData.password,
-          }),
-        },
-      )
+      const res = await useApiFetch<IAuthRes>("/user/login", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: userData.name,
+          password: userData.password,
+        }),
+      })
 
-      if (!res.access_token) {
+      const saveStatus = userStore.saveUserData(res.accessToken)
+
+      if (!saveStatus) {
         throw Error
       }
 
-      token.value = res.access_token
-      accessToken.value = token.value
-      refreshToken.value = token.value
-
-      await userStore.getProfile()
-
+      isAuth.value = true
       await router.push("/")
     } catch (e: any) {
       if (e.status === 401) {
@@ -59,5 +59,48 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  return { isLoading, token, error, accessToken, refreshToken, login }
+  function initJWT() {
+    if (!refreshToken.value) {
+      return false
+    }
+
+    const saveStatus = userStore.saveUserData(refreshToken.value)
+    isAuth.value = true
+    return saveStatus
+  }
+
+  function refresh(accessToken: string) {
+    const saveStatus = userStore.saveUserData(accessToken)
+
+    if (!saveStatus) {
+      throw Error
+    }
+
+    if (process.client) {
+      localStorage.setItem("token", accessToken)
+    }
+  }
+
+  function logout() {
+    isAuth.value = false
+
+    if (process.client) {
+      localStorage.setItem("token", "")
+    }
+
+    userStore.$reset()
+    useApiFetch("/user/logout")
+
+    router.push("/")
+  }
+
+  return {
+    error,
+    isAuth,
+    isLoading,
+    login,
+    logout,
+    refresh,
+    initJWT,
+  }
 })

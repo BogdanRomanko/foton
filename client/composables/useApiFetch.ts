@@ -8,38 +8,31 @@ export function useApiFetch<T>(
   url: NitroFetchRequest,
   options: ReqOptions = {},
 ) {
-  const token = useCookie("token")
-
-  const userStore = useUserStore()
   const authStore = useAuthStore()
-  const toast = useToast()
+
+  const token = process.client ? localStorage.getItem("token") : ""
 
   const defaults: ReqOptions = {
-    baseURL: "https://api.fakestorejson.com/api/v1/",
-    headers: userStore.isAuth
-      ? { Authorization: `Bearer ${authStore.refreshToken}` }
-      : {},
-
+    baseURL: "http://localhost:3000",
     retry: 1,
     retryStatusCodes: [401],
-    // credentials: "include",
+    credentials: "include",
     onRequest: (ctx) => {
-      ctx.options.headers = new Headers({
-        Authorization: `Bearer ${token.value}`,
-      })
+      if (authStore.isAuth) {
+        ctx.options.headers = new Headers({
+          Authorization: `Bearer ${token}`,
+        })
+      }
     },
     onResponseError: async (ctx) => {
       if (ctx.response.status === 401) {
         try {
-          const res: any = await fetchApi("auth/refresh-token", {
+          const res: any = await fetchApi("user/refresh", {
             method: "post",
           })
-          token.value = res.access_token
+          authStore.refresh(res.accessToken)
         } catch (e) {
-          if (import.meta.client) {
-            toast.add({ title: "Unexpected error. Try later" })
-          }
-          userStore.logout()
+          authStore.logout()
         }
       }
     },

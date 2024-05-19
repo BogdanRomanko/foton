@@ -4,18 +4,21 @@
     "description": "foton app in nodejs",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --env-file='.env' -L index.js",
+        "dev": "nodemon --env-file='.env' --inspect -L index.js",
         "start": "node --env-file='.env' -L index.js"
     },
     "author": "Bogdan Romanko",
     "license": "ISC",
     "dependencies": {
-        "@prisma/client": "^5.11.0",
+        "@prisma/client": "^5.14.0",
+        "cors": "^2.8.5",
         "env": "^0.0.2",
         "express": "^4.19.2",
-        "prisma": "5.11.0",
-        "jsonwebtoken": "9.0.2",
         "joi": "17.12.3",
+        "jsonwebtoken": "9.0.2",
         "multer": "1.4.5-lts.1"
+    },
+    "devDependencies": {
+        "prisma": "^5.14.0"
     }
 }

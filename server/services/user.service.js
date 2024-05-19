@@ -34,20 +34,24 @@ class UserService {
         try {
             const user = await userModel.getUserByName(name)
 
+
+
             if (!user)
                 throw new apiError(404, `User with name "${name}" not found`)
 
             const hashPassword = this.hashPassword(password)
+                console.log('test', user, password, hashPassword)
+
 
             if (user.hash === hashPassword.hash) {
                 const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
                 await tokenService.saveToken(user.id, tokens.refreshToken)
-                
+
                 return tokens
             } else
                 throw new apiError(404, "Password not valid")
         } catch (e) {
-            next(e)
+            throw new Error(e)
         }
     }
 
@@ -63,7 +67,7 @@ class UserService {
 
         const user = await userModel.getUserById(userData.id)
         const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
-        
+
         return tokens
     }
 
@@ -72,7 +76,7 @@ class UserService {
             throw apiError.UnauthorizedError()
 
         await tokenService.removeToken(token)
-        
+
         return true
     }
 
@@ -92,7 +96,7 @@ class UserService {
             newUser.push({name: name})
         else
             newUser.push({name: oldUser.name})
-        
+
         if (password)
             newUser.push({password: this.hashPassword(password)})
         else
@@ -102,21 +106,21 @@ class UserService {
             newUser.push({role: role})
         else
             newUser.push({role: oldUser.role})
-        
+
         const user = await userModel.updateUser(parseInt(id), newUser.name, newUser.password.hash, newUser.password.salt, newUser.role)
 
         if (!user)
             throw new apiError(404, `User with name "${name}" not found`)
 
         const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
-        
+
         return tokens
     }
 
     hashPassword(password) {
         const salt = crypto.randomBytes(16).toString('hex')
         const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
-        
+
         return {hash, salt}
     }
 
