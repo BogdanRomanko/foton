@@ -1,8 +1,13 @@
 <template>
   <div class="container">
     <div class="navbar">
-      <NuxtLink class="navbar__item" to="/admin/add"> Add post </NuxtLink>
-      <NuxtLink class="navbar__item" to="/"> Back </NuxtLink>
+      <NuxtLink class="navbar__item" to="/admin/add"> Добавить товар </NuxtLink>
+      <NuxtLink class="navbar__item" to="/admin/add"> Список товаров </NuxtLink>
+      <NuxtLink class="navbar__item" to="/admin/add">
+        Информация о сайте
+      </NuxtLink>
+      <NuxtLink class="navbar__item" to="/admin/category"> Категории </NuxtLink>
+      <NuxtLink class="navbar__item" to="/"> Назад </NuxtLink>
     </div>
     <div class="workspace">
       <slot />

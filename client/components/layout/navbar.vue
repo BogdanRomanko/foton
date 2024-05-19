@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const langingStore = useLangingStore()
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -33,6 +34,9 @@ const langingStore = useLangingStore()
         <li><NuxtLink to="/products">Продукция</NuxtLink></li>
         <li><a href="/documents.html">Документы</a></li>
         <li><a href="/about.html">О нас</a></li>
+        <li v-if="userStore.isAdmin">
+          <NuxtLink to="/admin">Панель администратора</NuxtLink>
+        </li>
       </ul>
     </div>
   </header>
