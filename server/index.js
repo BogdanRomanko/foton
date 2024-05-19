@@ -24,7 +24,7 @@ app.use('/content', contentRouter)
 app.use('/sertificates', sertificateRouter)
 app.use('/categories', categoriesRouter)
 app.use('/products', productRouter)
-app.use('/image',express.static(path.join(__dirname, 'static')))
+app.use('/static',express.static(path.join(__dirname, 'static')))
 app.get('/', (req, res) => {
   res.send('Home')
 });

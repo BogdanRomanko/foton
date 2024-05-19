@@ -2,7 +2,8 @@
 
 <template>
   <div class="products">
-    <ProductsSection />
+    <ProductsPaginationList />
+    <!-- <ProductsSection /> -->
   </div>
 </template>
 

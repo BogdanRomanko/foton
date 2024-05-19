@@ -9,12 +9,12 @@ class ProductController {
             const schema = Joi.object({
                 id: Joi.number().required()
             })
-            const {error} = schema.validate(req.query)
+            const {error} = schema.validate(req.params)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await productService.getProductById(req.query.id)
+            const data = await productService.getProductById(req.params.id)
             res.json(data)
         } catch (e) {
             next(e)

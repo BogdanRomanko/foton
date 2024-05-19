@@ -1,5 +1,6 @@
 <script setup lang="ts">
 interface ICard {
+  id: number
   img: string
   text: string
 }
@@ -11,9 +12,9 @@ const { cardData } = defineProps<{
 
 <template>
   <div class="products-section-content-card">
-    <img :src="`/images/${cardData.img}`" alt="ВИП" />
+    <img :src="`http://localhost:3000/${cardData.img}`" alt="ВИП" />
     <span>{{ cardData.text }}</span>
-    <NuxtLink to="/product">Открыть</NuxtLink>
+    <NuxtLink :to="`/product/${cardData.id}`">Открыть</NuxtLink>
   </div>
 </template>
 

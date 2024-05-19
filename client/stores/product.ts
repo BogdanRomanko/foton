@@ -17,38 +17,28 @@ export const useProductStore = defineStore("product", () => {
   async function fetch({ isRewrite, params }: q = {}) {
     isLoading.value = true
 
-    const defaultParams = {
-      per_page: count.value,
-      page: page.value,
-    }
-
     try {
-      const res = await useApiFetch<{
-        data: any
-        next_page_url: string
-        total: number
-      }>("https://api.fakestorejson.com/api/v1/public/products", {
-        query: params ?? defaultParams,
+      const res = await useApiFetch<any>("products/getByPage", {
+        query: {
+          ...params,
+          page: page.value - 1,
+        },
       })
 
-      if (!res || !res.data) {
+      if (!res || !res[0].products) {
         error.value = "Error receiving articles. Try later"
         return
       }
 
-      if (res.total) {
-        total.value = res.total
-      }
-
-      if (!res.next_page_url) {
-        hasMore.value = false
+      if (res[1].count) {
+        total.value = res[1].count
       }
 
       if (isRewrite) {
         data.length = 0
       }
 
-      data.push(...res.data)
+      data.push(...res[0].products)
 
       return true
     } catch (e) {

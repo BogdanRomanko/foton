@@ -1,65 +1,18 @@
 <script setup lang="ts">
-interface ICard {
-  img: string
-  text: string
-}
-
-const data: ICard[] = [
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-  {
-    img: "vip.jpg",
-    text: "Краткая информация о высоковольном источнике питания",
-  },
-]
+const { data: articles, isLoading } = storeToRefs(useProductStore())
 </script>
 
 <template>
   <div class="products-section-content">
-    <ProductsCard v-for="card in data" :key="card.text" :card-data="card" />
+    <template v-for="post of articles" :key="post.id">
+      <ProductsCard
+        :card-data="{ id: post.id, img: post.image, text: post.title }"
+      />
+    </template>
+
+    <PostEmpty v-if="!isLoading && !articles.length" />
+    <PostSkeletonList v-if="isLoading" />
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss"></style>
