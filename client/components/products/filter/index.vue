@@ -12,8 +12,8 @@ watch(isFilter, (status) => {
 
 <template>
   <div class="container">
-    <PostFilterSearch />
-    <PostFilterCategories />
+    <ProductsFilterSearch />
+    <ProductsFilterCategories />
     <UButton @click="reset">reset</UButton>
   </div>
 </template>

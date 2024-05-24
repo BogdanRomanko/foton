@@ -57,7 +57,6 @@ export const useProductStore = defineStore("product", () => {
   }
 
   async function add(productData: any) {
-    console.log("test")
     isLoading.value = true
 
     try {
@@ -67,14 +66,43 @@ export const useProductStore = defineStore("product", () => {
         formData.append(key, value)
       }
 
-      const commentData = await useApiFetch<any>("products/create", {
+      const productRes = await useApiFetch<any>("products/create", {
         method: "post",
         body: formData,
       })
 
-      console.log("commentData", commentData)
+      console.log("productRes", productRes)
 
-      data.push(commentData)
+      data.push(productRes)
+
+      return true
+    } catch (e) {
+      console.log("e", e)
+      error.value = ""
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function edit(productData: any) {
+    isLoading.value = true
+
+    try {
+      const formData = new FormData()
+
+      for (const [key, value] of Object.entries<any>(productData)) {
+        formData.append(key, value)
+      }
+
+      const productRes = await useApiFetch<any>("products/update", {
+        method: "put",
+        body: formData,
+      })
+
+      console.log("productRes", productRes)
+
+      data.push(productRes)
 
       return true
     } catch (e) {
@@ -96,6 +124,7 @@ export const useProductStore = defineStore("product", () => {
     isLoading,
     fetch,
     add,
+    edit,
     $reset,
   }
 })
