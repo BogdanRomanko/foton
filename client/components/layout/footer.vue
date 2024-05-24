@@ -11,26 +11,26 @@ const langingStore = useLangingStore()
       <div class="footer-info-column">
         <div class="footer-info-column__item">
           <i class="fa fa-phone" aria-hidden="true"></i>
-          <span>{{ langingStore.data.header.info.phone1 }}</span>
+          <span>{{ langingStore.data.header?.info.phone1.content }}</span>
         </div>
         <div class="footer-info-column__item">
           <i class="fa fa-envelope" aria-hidden="true"></i>
-          <span>{{ langingStore.data.header.info.email }}</span>
+          <span>{{ langingStore.data.header?.info.email.content }}</span>
         </div>
         <div class="footer-info-column__item">
           <i class="fa fa-map" aria-hidden="true"></i>
-          <span>{{ langingStore.data.footer.adress.min }}</span>
+          <span>{{ langingStore.data.footer?.adress.min.content }}</span>
         </div>
       </div>
       <div class="footer-info-column">
         <div class="footer-info-column__item">
-          <p>ИНН {{ langingStore.data.footer.info.inn }}</p>
+          <p>ИНН {{ langingStore.data.footer?.info.inn.content }}</p>
         </div>
         <div class="footer-info-column__item">
-          <p>ОГРН {{ langingStore.data.footer.info.ogrn }}</p>
+          <p>ОГРН {{ langingStore.data.footer?.info.ogrn.content }}</p>
         </div>
         <div class="footer-info-column__item">
-          <p>КПП {{ langingStore.data.footer.info.kpp }}</p>
+          <p>КПП {{ langingStore.data.footer?.info.kpp.content }}</p>
         </div>
       </div>
     </div>

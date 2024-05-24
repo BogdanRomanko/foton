@@ -12,13 +12,15 @@ const langingStore = useLangingStore()
     <div class="content-map-info">
       <h3>Как нас найти?</h3>
       <p>
-        {{ langingStore.data.footer.adress.full }}
+        {{ langingStore.data.footer?.adress.full.content }}
       </p>
       <p>
-        Телефон: <a href="#">{{ langingStore.data.header.info.phone1 }}</a>
+        Телефон:
+        <a href="#">{{ langingStore.data.header?.info.phone1.content }}</a>
       </p>
       <p>
-        Почта: <a href="#">{{ langingStore.data.header.info.email }}</a>
+        Почта:
+        <a href="#">{{ langingStore.data.header?.info.email.content }}</a>
       </p>
     </div>
   </div>

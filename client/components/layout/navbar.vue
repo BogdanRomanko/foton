@@ -8,17 +8,17 @@ const userStore = useUserStore()
     <div class="header-top">
       <div class="header-logo">
         <img src="/s_5a5c800b0f01.jpeg" alt="Фотон" class="header-logo" />
-        <span>{{ langingStore.data.header.title }}</span>
+        <span>{{ langingStore.data.header?.title.content }}</span>
       </div>
 
       <div class="header-advertisement">
-        <span>{{ langingStore.data.header.advertisement }}</span>
+        <span>{{ langingStore.data.header?.advertisement.content }}</span>
       </div>
 
       <div class="header-contacs-info">
-        <a href="#">{{ langingStore.data.header.info.phone1 }}</a>
-        <a href="#">{{ langingStore.data.header.info.phone2 }}</a>
-        <a href="#">{{ langingStore.data.header.info.email }}</a>
+        <a href="#">{{ langingStore.data.header?.info.phone1.content }}</a>
+        <a href="#">{{ langingStore.data.header?.info.phone2.content }}</a>
+        <a href="#">{{ langingStore.data.header?.info.email.content }}</a>
       </div>
     </div>
     <div class="header-nav">
