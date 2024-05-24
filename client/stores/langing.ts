@@ -1,62 +1,94 @@
+export interface IStaticData {
+  id: number
+  title: string
+  content: string
+}
+
 export const useLangingStore = defineStore("langing", () => {
-  const data = ref({
-    header: {
-      title: "",
-      advertisement: "",
+  const data = ref<{
+    header?: {
+      title: IStaticData
+      advertisement: IStaticData
       info: {
-        phone1: "",
-        phone2: "",
-        email: "",
-      },
-    },
-    footer: {
+        phone1: IStaticData
+        phone2: IStaticData
+        email: IStaticData
+      }
+    }
+    footer?: {
       adress: {
-        full: "",
-        min: "",
-      },
+        full: IStaticData
+        min: IStaticData
+      }
       info: {
-        inn: "",
-        ogrn: "",
-        kpp: "",
-      },
-    },
-  })
+        inn: IStaticData
+        ogrn: IStaticData
+        kpp: IStaticData
+      }
+    }
+  }>({})
   const isLoading = ref(false)
   const error = ref("")
 
   async function fetch() {
-    console.log("FETCH", process.server, process.client)
     isLoading.value = true
-    const test = await $fetch(
-      "https://api.fakestorejson.com/api/v1/public/orders/9638aee1f217b7e407fff540",
-    )
-    console.log("test", test)
-    data.value = {
-      header: {
-        title: "ФОТОН",
-        advertisement:
-          "Производство и внедрение программно-аппаратных комплексов",
 
-        info: {
-          phone1: "+7(959)114-92-39",
-          phone2: "+7(959)000-00-00",
-          email: "foton_777@mail.ru",
+    try {
+      const res = await useApiFetch<IStaticData[]>("content/getAll")
+
+      if (!res) {
+        throw new Error("Непредвиденная ошибка. Повторите позже")
+      }
+
+      data.value = {
+        header: {
+          title: res[0],
+          advertisement: res[1],
+          info: {
+            phone1: res[2],
+            phone2: res[3],
+            email: res[4],
+          },
         },
-      },
-      footer: {
-        adress: {
-          full: "294204, Российская Федерация, ЛНР, г. Алчевск, ул. Волочаевская, д. 3А",
-          min: "г. Алчевск, ул. Волочаевская, д. 3А",
+        footer: {
+          adress: {
+            full: res[5],
+            min: res[6],
+          },
+          info: {
+            inn: res[7],
+            ogrn: res[8],
+            kpp: res[9],
+          },
         },
-        info: {
-          inn: "9406004267",
-          ogrn: "1229400029935",
-          kpp: "940601001",
-        },
-      },
+      }
+    } catch (e: any) {
+      error.value = e.message
+      return false
+    } finally {
+      isLoading.value = false
     }
-    isLoading.value = false
   }
 
-  return { fetch, data, isLoading, error }
+  async function edit(data: IStaticData) {
+    isLoading.value = true
+
+    try {
+      const res = await useApiFetch<IStaticData[]>("content/update", {
+        method: "put",
+        body: data,
+      })
+
+      if (!res) {
+        throw new Error("Непредвиденная ошибка. Повторите позже")
+      }
+    } catch (e: any) {
+      error.value = e.message
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return { fetch, edit, data, isLoading, error }
 })
