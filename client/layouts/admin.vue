@@ -2,8 +2,10 @@
   <div class="container">
     <div class="navbar">
       <NuxtLink class="navbar__item" to="/admin/add"> Добавить товар </NuxtLink>
-      <NuxtLink class="navbar__item" to="/admin/add"> Список товаров </NuxtLink>
-      <NuxtLink class="navbar__item" to="/admin/add">
+      <NuxtLink class="navbar__item" to="/admin/products">
+        Список товаров
+      </NuxtLink>
+      <NuxtLink class="navbar__item" to="/admin/langing">
         Информация о сайте
       </NuxtLink>
       <NuxtLink class="navbar__item" to="/admin/category"> Категории </NuxtLink>
