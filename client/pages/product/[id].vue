@@ -7,15 +7,19 @@ interface IProduct {
   categoryId: number
 }
 
+const url = import.meta.env.VITE_API
+
 const { params } = useRoute()
-const articleId = params.id as string
+const productId = params.id as string
+
+provide("productId", productId)
 
 const {
   pending,
   error,
   data: product,
 } = await useAsyncData<IProduct>(
-  `post/${articleId}`,
+  `post/${productId}`,
   async () => await useApiFetch(`products/get/${params.id}`),
   {
     server: true,
@@ -26,12 +30,13 @@ const {
 <template>
   {{ pending }}
   {{ error }}
-  <PostNotFount v-if="!product" :id="articleId" />
+  <PostNotFount v-if="!product" :id="productId" />
 
   <div v-else class="product">
+    <ProductHeader />
     <h2 class="product-header">{{ product.title }}</h2>
     <div class="product-image">
-      <img :src="`http://localhost:3000/${product.image}`" alt="ВИП" />
+      <img :src="`${url}/${product.image}`" alt="ВИП" />
     </div>
     <p>
       {{ product.description }}
