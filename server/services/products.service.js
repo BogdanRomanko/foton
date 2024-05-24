@@ -56,7 +56,7 @@ class ProductService {
     }
 
     async updateProduct(id, title, description, image, categoryId) {
-        return await productModel.updateProduct(parseInt(id), title, description, image, categoryId)
+        return await productModel.updateProduct(parseInt(id), title, description, image, parseInt(categoryId))
     }
 
     async updateProducts(data) {

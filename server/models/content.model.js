@@ -6,7 +6,11 @@ class ContentModel {
     async getAllContent() {
         try {
             await client.$connect()
-            const contents = await client.siteContent.findMany()
+            const contents = await client.siteContent.findMany({
+                orderBy: {
+                    id: 'asc'
+                }
+            })
             await client.$disconnect()
 
             return contents

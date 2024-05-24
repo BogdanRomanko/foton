@@ -180,7 +180,7 @@ class ProductController {
                 req.body.id,
                 req.body.title,
                 req.body.description,
-                req.file.path,
+                req.file?.path,
                 req.body.categoryId
                 )
             res.json(data)
