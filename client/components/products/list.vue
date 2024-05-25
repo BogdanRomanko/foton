@@ -1,17 +1,14 @@
 <script setup lang="ts">
-const { data: articles, isLoading } = storeToRefs(useProductStore())
+const { data: products } = storeToRefs(useProductStore())
 </script>
 
 <template>
   <div class="products-section-content">
-    <template v-for="post of articles" :key="post.id">
+    <template v-for="product of products" :key="product.id">
       <ProductsCard
-        :card-data="{ id: post.id, img: post.image, text: post.title }"
+        :card-data="{ id: product.id, img: product.image, text: product.title }"
       />
     </template>
-
-    <PostEmpty v-if="!isLoading && !articles.length" />
-    <PostSkeletonList v-if="isLoading" />
   </div>
 </template>
 

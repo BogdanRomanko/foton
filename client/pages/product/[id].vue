@@ -30,7 +30,7 @@ const {
 <template>
   {{ pending }}
   {{ error }}
-  <PostNotFount v-if="!product" :id="productId" />
+  <ProductsNotFount v-if="!product" :id="productId" />
 
   <div v-else class="product">
     <ProductHeader />

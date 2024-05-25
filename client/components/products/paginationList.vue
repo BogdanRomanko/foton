@@ -9,6 +9,7 @@ const currentPage = parseInt(route.query.page as any)
 if (currentPage && currentPage > 1) productStore.page = currentPage
 
 const { y } = useWindowScroll({ behavior: "smooth" })
+const { data: products, isLoading } = storeToRefs(useProductStore())
 
 watch(
   () => productStore.page,
@@ -21,7 +22,15 @@ watch(
 
 await useAsyncData(
   "posts",
-  async () => await productStore.fetch({ isRewrite: true }),
+  async () => {
+    if (route.query.search) {
+      await productStore.fetchByTitle(route.query.search as string)
+    } else if (route.query.category) {
+      await productStore.fetchByCategory(route.query.category as string)
+    } else {
+      await productStore.fetch({ isRewrite: true })
+    }
+  },
   {
     server: true,
   },
@@ -30,7 +39,9 @@ await useAsyncData(
 
 <template>
   <ProductsFilter />
-  <div class="products">
+  <ProductsEmpty v-if="!isLoading && !products.length" />
+  <ProductsSkeletonList v-else-if="isLoading" />
+  <div v-else class="products">
     <ProductsList />
     <div class="flex justify-center m-10">
       <UPagination
