@@ -9,7 +9,7 @@ const { id } = defineProps({
 
 <template>
   <h1>
-    Post with id <span>{{ id }}</span> not found
+    Product with id <span>{{ id }}</span> not found
   </h1>
 </template>
 
