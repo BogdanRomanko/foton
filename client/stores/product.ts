@@ -9,6 +9,8 @@ export const useProductStore = defineStore("product", () => {
 
   const hasMore = ref(true)
 
+  const categoryStore = useCategoryStore()
+
   interface q {
     isRewrite?: boolean
     params?: { keyword?: string; category?: string }
@@ -43,6 +45,76 @@ export const useProductStore = defineStore("product", () => {
       return true
     } catch (e) {
       error.value = "Unexpected error. Try later"
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function fetchByTitle(substring: string) {
+    isLoading.value = true
+
+    try {
+      const res = await useApiFetch<any>("products/getByTitle", {
+        query: {
+          title: substring,
+        },
+      })
+
+      if (!res) {
+        error.value = "Error receiving articles. Try later"
+        return
+      }
+
+      data.length = 0
+
+      data.push(...res)
+
+      return true
+    } catch (e) {
+      error.value = "Unexpected error. Try later"
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function fetchByCategory(categoryTitle: string) {
+    isLoading.value = true
+
+    await categoryStore.fetch()
+
+    if (categoryStore.error || !categoryStore.data) {
+      throw new Error("Ошибка получения списка категорий. Повторите позже")
+    }
+
+    const category = categoryStore.data.find(
+      (category) => category.title === categoryTitle,
+    )
+
+    if (!category) {
+      throw new Error("Выбранной категории не существует")
+    }
+
+    try {
+      const res = await useApiFetch<any>("products/getByCategory", {
+        query: {
+          categoryId: category.id,
+        },
+      })
+
+      if (!res) {
+        error.value = "Error receiving articles. Try later"
+        return
+      }
+
+      data.length = 0
+
+      data.push(...res)
+
+      return true
+    } catch (e: any) {
+      error.value = e.message ?? "Unexpected error. Try later"
       return false
     } finally {
       isLoading.value = false
@@ -123,6 +195,8 @@ export const useProductStore = defineStore("product", () => {
     error,
     isLoading,
     fetch,
+    fetchByTitle,
+    fetchByCategory,
     add,
     edit,
     $reset,

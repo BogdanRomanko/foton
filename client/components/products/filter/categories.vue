@@ -1,41 +1,59 @@
 <script setup lang="ts">
-const articleParams = useArticleParamsStore()
+const categoryStore = useCategoryStore()
+const { fetch, fetchByCategory } = useProductStore()
+const selectedId = ref()
 
-const {
-  data: categories,
-  error,
-  pending,
-} = await useFetch(
-  "https://api.fakestorejson.com/api/v1/public/product-categories",
-  {
-    transform: (value: any) => {
-      if (!value || !value.data) return []
-      return value.data.map((item: any) => item.name)
-    },
-  },
-)
+const route = useRoute()
+const router = useRouter()
+
+useAsyncData(async () => {
+  await categoryStore.fetch()
+
+  const currentCategory = route.query.category
+
+  if (!currentCategory) return
+
+  const category = categoryStore.data.find(
+    (category) => category.title === currentCategory,
+  )
+
+  if (!category) return
+
+  selectedId.value = category.id
+})
+
+function onSelect() {
+  const category = categoryStore.data.find(
+    (category) => category.id === selectedId.value,
+  )
+
+  if (!category) return
+
+  router.push({ query: { category: category.title } })
+  fetchByCategory(category.title)
+}
 
 watch(
-  () => articleParams.category,
-  () => articleParams.addQuery("category"),
+  () => route.query.category,
+  (searchTitle) => {
+    if (!searchTitle) {
+      selectedId.value = ""
+      if (Object.keys(route.query).length > 0) return
+      fetch({ isRewrite: true })
+    }
+  },
 )
 </script>
 
 <template>
-  <div v-if="error">
-    <p>{{ error }}</p>
-  </div>
-  <div v-else>
-    <UFormGroup label="Category">
-      <!-- <USkeleton v-if="pending" class="h-6 w-full" /> -->
-      <USelectMenu
-        v-model="articleParams.category"
-        :loading="pending"
-        :options="categories"
-        placeholder="Select category"
-      />
-    </UFormGroup>
-  </div>
+  <USelectMenu
+    v-model="selectedId"
+    :options="categoryStore.data"
+    placeholder="Select categories"
+    value-attribute="id"
+    option-attribute="title"
+    @close="onSelect"
+  />
 </template>
 
 <style scoped></style>
