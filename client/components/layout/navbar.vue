@@ -32,8 +32,8 @@ const userStore = useUserStore()
       <ul>
         <li><NuxtLink to="/">Главная</NuxtLink></li>
         <li><NuxtLink to="/products">Продукция</NuxtLink></li>
-        <li><a href="/documents.html">Документы</a></li>
-        <li><a href="/about.html">О нас</a></li>
+        <li><a href="/documents">Документы</a></li>
+        <li><a href="/about">О нас</a></li>
         <li v-if="userStore.isAdmin">
           <NuxtLink to="/admin">Панель администратора</NuxtLink>
         </li>
