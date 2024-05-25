@@ -1,20 +1,16 @@
 <script setup lang="ts">
-const { fetch } = useArticleStore()
-const articleParams = useArticleParamsStore()
-const { isFilter } = storeToRefs(articleParams)
-const { reset } = articleParams
+const router = useRouter()
 
-watch(isFilter, (status) => {
-  if (status) return
-  fetch({ isRewrite: true })
-})
+function onReset() {
+  router.push({ query: {} })
+}
 </script>
 
 <template>
   <div class="container">
     <ProductsFilterSearch />
     <ProductsFilterCategories />
-    <UButton @click="reset">reset</UButton>
+    <UButton @click="onReset">reset</UButton>
   </div>
 </template>
 
