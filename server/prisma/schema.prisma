@@ -66,7 +66,6 @@ model ProductBlocks {
 
 model ProductImages {
   id        Int      @id @default(autoincrement())
-  name      String
   path      String
   product   Products @relation(fields: [productId], references: [id])
   productId Int

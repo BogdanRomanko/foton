@@ -44,8 +44,8 @@ class ProductService {
         })
 
         for (let i = 0; i < ids.length; i++) {
-            const sert = await this.getProductById(ids[i])
-            paths.push(sert.sertificateImage)
+            const images = await this.getProductById(ids[i])
+            paths.push(images.image)
         }
 
         await this.deleteImages(paths)

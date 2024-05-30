@@ -1,5 +1,6 @@
 const productService = require('../services/products.service')
 const blocksService = require('../services/blocks.service')
+const imagesService = require('../services/product.images.service')
 const apiError = require('../exceptions/server.error')
 const Joi = require('joi')
 
@@ -132,6 +133,7 @@ class ProductController {
 
             const data = await productService.deleteProduct(req.query.id)
             const blocks = await blocksService.deleteBlocks(req.query.id)
+            const images = await imagesService.deleteImages(req.query.id)
             res.json(data)
         } catch (e) {
             next(e)
@@ -150,6 +152,7 @@ class ProductController {
 
             const data = await productService.deleteProducts(req.body.data)
             const blocks = await blocksService.deleteManyProductBlocks(req.body.data)
+            const images = await imagesService.deleteManyProductsImages(req.body.data)
             res.json(data)
         } catch (e) {
             next(e)
@@ -184,6 +187,56 @@ class ProductController {
 
             const blocks = await blocksService.addBlocks(req.body.blocks, data.id)
             data.blocks = blocks
+
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async saveImages(req, res, next) {
+        try {
+            req.files.forEach(image => {
+                imagesService.addImage(image.path, req.body.productId)
+            })
+
+            const data = await imagesService.getProductImages(req.body.productId)
+
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async deleteImages(req, res, next) {
+        try {
+            const schema = Joi.object({
+                productId: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
+            const data = await imagesService.deleteImages(req.query.productId)
+
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async deleteImage(req, res, next) {
+        try {
+            const schema = Joi.object({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
+            const data = await imagesService.deleteImage(req.query.id)
 
             res.json(data)
         } catch (e) {

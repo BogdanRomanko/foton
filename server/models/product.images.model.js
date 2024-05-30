@@ -1,32 +1,31 @@
 const PrismaClient = require('@prisma/client').PrismaClient
 const client = new PrismaClient()
 
-class BlocksModel {
+class ProductImagesModel {
 
-    async getProductsBlocks(productId) {
+    async getProductImages(productId) {
         try {
             await client.$connect()
-            const blocks = await client.productBlocks.findMany({
+            const images = await client.productImages.findMany({
                 where: {
                     productId: productId
                 }
             })
             await client.$disconnect()
 
-            return blocks
+            return images
         } catch (e) {
             console.error(e)
             await client.$disconnect()
         }
     }
 
-    async addBlock(type, content, productId) {
+    async addImage(path, productId) {
         try {
             await client.$connect()
-            const res = await client.productBlocks.create({
+            const res = await client.productImages.create({
                 data: {
-                    type: type,
-                    content: content,
+                    path: path,
                     productId: productId
                 }
             })
@@ -39,30 +38,10 @@ class BlocksModel {
         }
     }
 
-    async addBlocks(data, productId) {
-        try {
-            data.forEach(item => {
-                item.productId = productId
-            })
-
-            await client.$connect()
-            const res = await client.productBlocks.createMany({
-                data: data,
-                skipDuplicates: true
-            })
-            await client.$disconnect()
-
-            return res
-        } catch (e) {
-            console.error(e)
-            await client.$disconnect()
-        }
-    }
-
-    async deleteBlocks(productId) {
+    async deleteImages(productId) {
         try {
             await client.$connect()
-            const res = await client.productBlocks.deleteMany({
+            const res = await client.productImages.deleteMany({
                 where: {
                     productId: productId
                 }
@@ -76,16 +55,32 @@ class BlocksModel {
         }
     }
 
-    async updateBlock(id, type, content, productId) {
+    async deleteImage(id) {
         try {
             await client.$connect()
-            const res = await client.productBlocks.update({
+            const res = await client.productImages.delete({
+                where: {
+                    id: id
+                }
+            })
+            await client.$disconnect()
+
+            return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async updateImage(id, path, productId) {
+        try {
+            await client.$connect()
+            const res = await client.productImages.update({
                 where: {
                     id: id
                 },
                 data: {
-                    type: type,
-                    content: content,
+                    path: path,
                     productId: productId
                 }
             })
@@ -98,11 +93,11 @@ class BlocksModel {
         }
     }
 
-    async updateBlocks(data) {
+    async updateImages(data) {
         try {
             var res = []
             data.forEach(cur => {
-                res.push(this.updateBlock(parseInt(cur.id), cur.type, cur.content, cur.productId))
+                res.push(this.updateImage(parseInt(cur.id), cur.path, parseInt(cur.productId)))
             })
 
             return res.length
@@ -112,4 +107,4 @@ class BlocksModel {
     }
 }
 
-module.exports = new BlocksModel()
+module.exports = new ProductImagesModel()

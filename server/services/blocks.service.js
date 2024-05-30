@@ -6,7 +6,7 @@ class BlocksService {
         return await blockModdel.getProductsBlocks(parseInt(productId))
     }
 
-    async addBlock(type, content, product_id) {
+    async addBlock(type, content, productId) {
         return await blockModdel.addBlock(type, content, parseInt(productId))
     }
 
@@ -20,7 +20,7 @@ class BlocksService {
 
     async deleteManyProductBlocks(data) {
         data.forEach(item => {
-            this.deleteBlocks(parseInt(item.id))
+            this.deleteBlocks(parseInt(item.productId))
         })
     }
 
