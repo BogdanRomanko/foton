@@ -213,7 +213,7 @@ class ProductController {
     async deleteImages(req, res, next) {
         try {
             const schema = Joi.object({
-                productId: Joi.number().required()
+                blockId: Joi.number().required()
             })
             const {error} = schema.validate(req.query)
 
@@ -239,6 +239,24 @@ class ProductController {
                 throw apiError.HttpException(error.details[0].message)
 
             const data = await imagesService.deleteImage(req.query.id)
+
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async deleteBlock(req, res, next) {
+        try {
+            const schema = Joi.object({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
+            const data = await blocksService.deleteBlock(req.query.id)
 
             res.json(data)
         } catch (e) {
