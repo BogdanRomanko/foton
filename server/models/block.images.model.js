@@ -1,14 +1,14 @@
 const PrismaClient = require('@prisma/client').PrismaClient
 const client = new PrismaClient()
 
-class ProductImagesModel {
+class BlockImagesModel {
 
-    async getProductImages(productId) {
+    async getBlockImages(blockId) {
         try {
             await client.$connect()
-            const images = await client.productImages.findMany({
+            const images = await client.blockImages.findMany({
                 where: {
-                    productId: productId
+                    blockId: blockId
                 }
             })
             await client.$disconnect()
@@ -20,13 +20,13 @@ class ProductImagesModel {
         }
     }
 
-    async addImage(path, productId) {
+    async addImage(path, blockId) {
         try {
             await client.$connect()
-            const res = await client.productImages.create({
+            const res = await client.blockImages.create({
                 data: {
                     path: path,
-                    productId: productId
+                    blockId: blockId
                 }
             })
             await client.$disconnect()
@@ -38,12 +38,12 @@ class ProductImagesModel {
         }
     }
 
-    async deleteImages(productId) {
+    async deleteBlockImages(blockId) {
         try {
             await client.$connect()
-            const res = await client.productImages.deleteMany({
+            const res = await client.blockImages.deleteMany({
                 where: {
-                    productId: productId
+                    blockId: blockId
                 }
             })
             await client.$disconnect()
@@ -58,7 +58,7 @@ class ProductImagesModel {
     async deleteImage(id) {
         try {
             await client.$connect()
-            const res = await client.productImages.delete({
+            const res = await client.blockImages.delete({
                 where: {
                     id: id
                 }
@@ -72,16 +72,16 @@ class ProductImagesModel {
         }
     }
 
-    async updateImage(id, path, productId) {
+    async updateImage(id, path, blockId) {
         try {
             await client.$connect()
-            const res = await client.productImages.update({
+            const res = await client.blockImages.update({
                 where: {
                     id: id
                 },
                 data: {
                     path: path,
-                    productId: productId
+                    blockId: blockId
                 }
             })
             await client.$disconnect()
@@ -97,7 +97,7 @@ class ProductImagesModel {
         try {
             var res = []
             data.forEach(cur => {
-                res.push(this.updateImage(parseInt(cur.id), cur.path, parseInt(cur.productId)))
+                res.push(this.updateImage(parseInt(cur.id), cur.path, parseInt(cur.blockId)))
             })
 
             return res.length
@@ -107,4 +107,4 @@ class ProductImagesModel {
     }
 }
 
-module.exports = new ProductImagesModel()
+module.exports = new BlockImagesModel()

@@ -15,7 +15,6 @@ model Products {
   image         String?
   category      ProductCategory @relation(fields: [categoryId], references: [id])
   categoryId    Int
-  ProductImages ProductImages[]
   ProductBlocks ProductBlocks[]
 }
 
@@ -57,16 +56,17 @@ enum Role {
 }
 
 model ProductBlocks {
-  id        Int      @id @default(autoincrement())
-  type      String
-  content   String
-  product   Products @relation(fields: [productId], references: [id])
-  productId Int
+  id            Int           @id @default(autoincrement())
+  type          String
+  content       String
+  product       Products      @relation(fields: [productId], references: [id])
+  productId     Int
+  ProductImages BlockImages[]
 }
 
-model ProductImages {
-  id        Int      @id @default(autoincrement())
-  path      String
-  product   Products @relation(fields: [productId], references: [id])
-  productId Int
+model BlockImages {
+  id      Int           @id @default(autoincrement())
+  path    String
+  block   ProductBlocks @relation(fields: [blockId], references: [id])
+  blockId Int
 }

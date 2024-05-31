@@ -3,6 +3,23 @@ const client = new PrismaClient()
 
 class BlocksModel {
 
+    async getBlock(blockId) {
+        try {
+            await client.$connect()
+            const block = await client.productBlocks.findUnique({
+                where: {
+                    id: blockId
+                }
+            })
+            await client.$disconnect()
+
+            return block
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
     async getProductsBlocks(productId) {
         try {
             await client.$connect()
@@ -53,6 +70,23 @@ class BlocksModel {
             await client.$disconnect()
 
             return res
+        } catch (e) {
+            console.error(e)
+            await client.$disconnect()
+        }
+    }
+
+    async deleteBlock(blockId) {
+        try {
+            await client.$connect()
+            const block = await client.productBlocks.findUnique({
+                where: {
+                    id: blockId
+                }
+            })
+            await client.$disconnect()
+
+            return block
         } catch (e) {
             console.error(e)
             await client.$disconnect()

@@ -1,6 +1,6 @@
 const productService = require('../services/products.service')
 const blocksService = require('../services/blocks.service')
-const imagesService = require('../services/product.images.service')
+const imagesService = require('../services/block.images.service')
 const apiError = require('../exceptions/server.error')
 const Joi = require('joi')
 
@@ -133,7 +133,8 @@ class ProductController {
 
             const data = await productService.deleteProduct(req.query.id)
             const blocks = await blocksService.deleteBlocks(req.query.id)
-            const images = await imagesService.deleteImages(req.query.id)
+            data.blocks = blocks
+
             res.json(data)
         } catch (e) {
             next(e)
@@ -152,7 +153,8 @@ class ProductController {
 
             const data = await productService.deleteProducts(req.body.data)
             const blocks = await blocksService.deleteManyProductBlocks(req.body.data)
-            const images = await imagesService.deleteManyProductsImages(req.body.data)
+            data.blocks = blocks
+
             res.json(data)
         } catch (e) {
             next(e)
@@ -197,10 +199,10 @@ class ProductController {
     async saveImages(req, res, next) {
         try {
             req.files.forEach(image => {
-                imagesService.addImage(image.path, req.body.productId)
+                imagesService.addImage(image.path, req.body.blockId)
             })
 
-            const data = await imagesService.getProductImages(req.body.productId)
+            const data = await imagesService.getBlockImages(req.body.blockId)
 
             res.json(data)
         } catch (e) {
@@ -218,7 +220,7 @@ class ProductController {
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await imagesService.deleteImages(req.query.productId)
+            const data = await imagesService.deleteImages(req.query.blockId)
 
             res.json(data)
         } catch (e) {
