@@ -99,10 +99,12 @@ function onSubmitCreate(event: FormSubmitEvent<Schema>) {
 function onSubmitEdit(event: FormSubmitEvent<Schema>) {
   const { image, ...data } = event.data
 
+  console.log(image)
+
   productStore.edit({
     id,
     ...data,
-    ...(image.length === 1 && { image }),
+    ...(image.length === 1 && { image: image[0] }),
   })
 }
 </script>

@@ -164,7 +164,7 @@ export const useProductStore = defineStore("product", () => {
       const formData = new FormData()
 
       for (const [key, value] of Object.entries<any>(productData)) {
-        formData.append(key, value)
+        formData.set(key, value)
       }
 
       const productRes = await useApiFetch<any>("products/update", {
