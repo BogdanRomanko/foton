@@ -9,7 +9,7 @@ const files = inject("files", [])
 </script>
 
 <template>
-  <UiFileUpload accept=".jpeg, .jpg, .png, .gif, .svg" />
+  <UiFileUpload v-model="files" accept=".jpeg, .jpg, .png, .gif, .svg" />
   <template v-if="files.length > 0">
     <img v-for="file in files" :key="file" :src="getMediaSrc(file)" alt="" />
   </template>

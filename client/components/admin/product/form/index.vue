@@ -138,6 +138,7 @@ function onSubmitEdit(event: FormSubmitEvent<Schema>) {
           option-attribute="title"
         />
       </UFormGroup>
+      <AdminConstructor />
       <UButton type="submit"> {{ type }} </UButton>
     </UForm>
   </div>
