@@ -1,4 +1,6 @@
 const productService = require('../services/products.service')
+const blocksService = require('../services/blocks.service')
+const imagesService = require('../services/block.images.service')
 const apiError = require('../exceptions/server.error')
 const Joi = require('joi')
 
@@ -9,12 +11,14 @@ class ProductController {
             const schema = Joi.object({
                 id: Joi.number().required()
             })
-            const {error} = schema.validate(req.params)
+            const {error} = schema.validate(req.query)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await productService.getProductById(req.params.id)
+            const data = await productService.getProductById(req.query.id)
+            const blocks = await blocksService.getProductsBlocks(data.id)
+            data.blocks = blocks
             res.json(data)
         } catch (e) {
             next(e)
@@ -83,45 +87,34 @@ class ProductController {
 
     async addProduct(req, res, next) {
         try {
+            req.body.blocks = JSON.parse(req.body.blocks)
+
             const schema = Joi.object({
                 title: Joi.string().required(),
                 description: Joi.string().required(),
                 image: Joi.any().meta({swaggerType: 'file'}).optional(),
-                categoryId: Joi.number().required()
+                categoryId: Joi.number().required(),
+                blocks: Joi.array().items({
+                    type: Joi.string().required(),
+                    content: Joi.string().required()
+                })
             })
+
             const {error} = schema.validate(req.body)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
-
-            console.log(req.body)
 
             const data = await productService.addProduct(
                 req.body.title,
                 req.body.description,
                 req.file.path,
                 req.body.categoryId
-                )
-            res.json(data)
-        } catch (e) {
-            next(e)
-        }
-    }
+            )
 
-    async addProducts(req, res, next) {
-        try {
-            const schema = Joi.array().items({
-                title: Joi.string().required(),
-                description: Joi.string().required(),
-                image: Joi.string().required(),
-                categoryId: Joi.number().required()
-            })
-            const {error} = schema.validate(req.body.data)
+            const blocks = await blocksService.addBlocks(req.body.blocks, data.id)
+            data.blocks = blocks
 
-            if (error)
-                throw apiError.HttpException(error.details[0].message)
-
-            const data = await productService.addProducts(req.body.data)
             res.json(data)
         } catch (e) {
             next(e)
@@ -139,6 +132,9 @@ class ProductController {
                 throw apiError.HttpException(error.details[0].message)
 
             const data = await productService.deleteProduct(req.query.id)
+            const blocks = await blocksService.deleteBlocks(req.query.id)
+            data.blocks = blocks
+
             res.json(data)
         } catch (e) {
             next(e)
@@ -156,6 +152,9 @@ class ProductController {
                 throw apiError.HttpException(error.details[0].message)
 
             const data = await productService.deleteProducts(req.body.data)
+            const blocks = await blocksService.deleteManyProductBlocks(req.body.data)
+            data.blocks = blocks
+
             res.json(data)
         } catch (e) {
             next(e)
@@ -169,7 +168,11 @@ class ProductController {
                 title: Joi.string().required(),
                 description: Joi.string().required(),
                 image: Joi.any().meta({swaggerType: 'file'}).optional(),
-                categoryId: Joi.number().required()
+                categoryId: Joi.number().required(),
+                blocks: Joi.array().items({
+                    type: Joi.string().required(),
+                    content: Joi.string().required()
+                })
             })
             const {error} = schema.validate(req.body)
 
@@ -182,31 +185,82 @@ class ProductController {
                 req.body.description,
                 req.file?.path,
                 req.body.categoryId
-                )
+            )
+
+            const blocks = await blocksService.addBlocks(req.body.blocks, data.id)
+            data.blocks = blocks
+
             res.json(data)
         } catch (e) {
             next(e)
         }
     }
 
-    async updateProducts(req, res, next) {
+    async saveImages(req, res, next) {
         try {
-            const schema = Joi.array().items({
-                id: Joi.number().required(),
-                title: Joi.string().required(),
-                description: Joi.string().required(),
-                image: Joi.string().required(),
-                categoryId: Joi.number().required()
+            req.files.forEach(image => {
+                imagesService.addImage(image.path, req.body.blockId)
             })
-            const {error} = schema.validate(req.body.data)
+
+            const data = await imagesService.getBlockImages(req.body.blockId)
+
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async deleteImages(req, res, next) {
+        try {
+            const schema = Joi.object({
+                blockId: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await productService.updateProducts(req.body.data)
+            const data = await imagesService.deleteImages(req.query.blockId)
+
             res.json(data)
         } catch (e) {
-            console.error(e)
+            next(e)
+        }
+    }
+
+    async deleteImage(req, res, next) {
+        try {
+            const schema = Joi.object({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
+            const data = await imagesService.deleteImage(req.query.id)
+
+            res.json(data)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async deleteBlock(req, res, next) {
+        try {
+            const schema = Joi.object({
+                id: Joi.number().required()
+            })
+            const {error} = schema.validate(req.query)
+
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
+            const data = await blocksService.deleteBlock(req.query.id)
+
+            res.json(data)
+        } catch (e) {
+            next(e)
         }
     }
 }

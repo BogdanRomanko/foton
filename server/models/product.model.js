@@ -110,19 +110,6 @@ class ProductModel {
         }
     }
 
-    async addProducts(data) {
-        try {
-            await client.$connect()
-            const res = await client.products.createMany({
-                data: data
-            })
-            await client.$disconnect()
-        } catch (e) {
-            console.error(e)
-            await client.$disconnect()
-        }
-    }
-
     async deleteProduct(id) {
         try {
             await client.$connect()
@@ -179,19 +166,6 @@ class ProductModel {
         } catch (e) {
             console.error(e)
             await client.$disconnect()
-        }
-    }
-
-    async updateProducts(data) {
-        try {
-            var res = []
-            data.forEach(cur => {
-                res.push(this.updateProduct(parseInt(cur.id), cur.title, cur.description, cur.image, cur.categoryId))
-            })
-
-            return res.length
-        } catch (e) {
-            console.error(e)
         }
     }
 }

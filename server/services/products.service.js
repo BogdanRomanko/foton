@@ -1,4 +1,6 @@
 const productModel = require('../models/product.model')
+const fs = require('fs')
+const Path = require('path')
 
 class ProductService {
 
@@ -26,10 +28,6 @@ class ProductService {
         return await productModel.addProduct(title, description, image, parseInt(categoryId))
     }
 
-    async addProducts(data) {
-        return await productModel.addProducts(data)
-    }
-
     async deleteProduct(id) {
         const product = await this.getProductById(parseInt(id))
         await this.deleteImage(product.image)
@@ -46,8 +44,8 @@ class ProductService {
         })
 
         for (let i = 0; i < ids.length; i++) {
-            const sert = await this.getProductById(ids[i])
-            paths.push(sert.sertificateImage)
+            const images = await this.getProductById(ids[i])
+            paths.push(images.image)
         }
 
         await this.deleteImages(paths)
@@ -57,10 +55,6 @@ class ProductService {
 
     async updateProduct(id, title, description, image, categoryId) {
         return await productModel.updateProduct(parseInt(id), title, description, image, parseInt(categoryId))
-    }
-
-    async updateProducts(data) {
-        return await productModel.updateProducts(data)
     }
 
     async deleteImage(imagePath) {
