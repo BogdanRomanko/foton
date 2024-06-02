@@ -11,29 +11,31 @@ defineExpose({
 const { isEdit, content } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: IQuouteContent
+    content?: string
   }>(),
   {
     isEdit: false,
-    content: () => ({
-      text: "",
-      author: "",
-    }),
+    content: "",
   },
 )
 
-const text = ref(content.text)
-const author = ref(content.author)
+const quouteContent: IQuouteContent = JSON.parse(content) ?? {
+  author: "",
+  text: "",
+}
+
+const text = ref(quouteContent.text)
+const author = ref(quouteContent.author)
 
 function getData() {
   if (!text.value || !author.value) return
 
   return {
     type: "quoute",
-    content: {
+    content: JSON.stringify({
       text: text.value,
       author: author.value,
-    },
+    }),
   }
 }
 
@@ -53,12 +55,14 @@ function onInputAuthor(e: Event) {
       :placeholder="isEdit ? 'Текст цитаты' : undefined"
       :contenteditable="isEdit || undefined"
       @input="onInputText"
+      v-html="text"
     ></p>
     <p
       :class="$style.author"
       :placeholder="isEdit ? 'Подпись' : undefined"
       :contenteditable="isEdit || undefined"
       @input="onInputAuthor"
+      v-html="author"
     ></p>
   </blockquote>
 </template>

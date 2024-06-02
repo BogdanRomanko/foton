@@ -8,6 +8,7 @@ import {
   ProductBlockMedia,
   ProductBlockSlider,
   ProductBlockList,
+  ProductBlockQuoute,
 } from "#components"
 
 const { blocks } = defineProps<{
@@ -29,6 +30,8 @@ function getComponent(type: string) {
     return ProductBlockMedia
   } else if (type === "slider") {
     return ProductBlockSlider
+  } else if (type === "quoute") {
+    return ProductBlockQuoute
   }
 
   return null
