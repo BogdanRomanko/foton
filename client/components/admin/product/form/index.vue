@@ -5,6 +5,7 @@ import type { IProduct } from "../../../../pages/product/[id].vue"
 
 const productStore = useProductStore()
 const categoryStore = useCategoryStore()
+const router = useRouter()
 
 const files = reactive([])
 provide("files", files)
@@ -84,22 +85,31 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   else console.error("unknown product type form")
 }
 
-function onSubmitCreate(event: FormSubmitEvent<Schema>) {
-  productStore.add({
+async function onSubmitCreate(event: FormSubmitEvent<Schema>) {
+  const productId = await productStore.add({
     ...event.data,
     blocks: blockConstructor.value.getBlocksContent(),
     ...(event.data.image.length === 1 && { image: event.data.image[0] }),
   })
+
+  if (!productId) return
+
+  router.push(`/product/${productId}`)
 }
-function onSubmitEdit(event: FormSubmitEvent<Schema>) {
+
+async function onSubmitEdit(event: FormSubmitEvent<Schema>) {
   const { image, ...data } = event.data
 
-  productStore.edit({
+  const productId = await productStore.edit({
     id: productData?.id,
     ...data,
     ...(image.length === 1 && { image: image[0] }),
     blocks: blockConstructor.value.getBlocksContent(),
   })
+
+  if (!productId) return
+
+  router.push(`/product/${productId}`)
 }
 </script>
 
