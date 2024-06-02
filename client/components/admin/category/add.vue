@@ -16,9 +16,8 @@ type Schema = InferType<typeof schema>
 
 const categoryStore = useCategoryStore()
 
-function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log(event.data)
-  categoryStore.add(event.data)
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  await categoryStore.add(event.data)
   state.title = ""
 }
 </script>
