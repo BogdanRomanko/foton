@@ -1,7 +1,14 @@
 <script setup lang="ts">
 const userStore = useUserStore()
+const productStore = useProductStore()
 
-const productId = inject("productId")
+const productId = inject("productId", "")
+
+function onDeleteProduct() {
+  if (!productId) return
+
+  productStore.remove(productId)
+}
 </script>
 
 <template>
@@ -11,6 +18,7 @@ const productId = inject("productId")
     <UiModalConfirm
       button-text="Удалить"
       message="Вы действительно хотите удалить данный товар ?"
+      @confirm="onDeleteProduct"
     />
   </div>
 </template>

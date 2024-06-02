@@ -1,7 +1,8 @@
 import type { productFormData } from "~/components/admin/product/form/index.vue"
+import type { IProduct } from "~/pages/product/[id].vue"
 
 export const useProductStore = defineStore("product", () => {
-  const data = reactive<any[]>([])
+  const data = ref<IProduct[]>([])
   const error = ref("")
   const isLoading = ref(false)
 
@@ -39,10 +40,10 @@ export const useProductStore = defineStore("product", () => {
       }
 
       if (isRewrite) {
-        data.length = 0
+        data.value.length = 0
       }
 
-      data.push(...res[0].products)
+      data.value.push(...res[0].products)
 
       return true
     } catch (e) {
@@ -68,9 +69,9 @@ export const useProductStore = defineStore("product", () => {
         return
       }
 
-      data.length = 0
+      data.value.length = 0
 
-      data.push(...res)
+      data.value.push(...res)
 
       return true
     } catch (e) {
@@ -110,9 +111,9 @@ export const useProductStore = defineStore("product", () => {
         return
       }
 
-      data.length = 0
+      data.value.length = 0
 
-      data.push(...res)
+      data.value.push(...res)
 
       return true
     } catch (e: any) {
@@ -124,7 +125,7 @@ export const useProductStore = defineStore("product", () => {
   }
 
   function $reset() {
-    data.length = 0
+    data.value.length = 0
     page.value = 1
     total.value = 0
     hasMore.value = true
@@ -140,16 +141,18 @@ export const useProductStore = defineStore("product", () => {
         formData.append(key, value)
       }
 
-      const productRes = await useApiFetch<any>("products/create", {
+      const productRes = await useApiFetch<IProduct>("products/create", {
         method: "post",
         body: formData,
       })
 
-      console.log("productRes", productRes)
+      if (!productRes) {
+        throw new Error("Ошибка при создании поста. Повторите позже")
+      }
 
-      data.push(productRes)
+      data.value.push(productRes)
 
-      return true
+      return productRes.id
     } catch (e) {
       console.log("e", e)
       error.value = ""
@@ -169,19 +172,44 @@ export const useProductStore = defineStore("product", () => {
         formData.set(key, value)
       }
 
-      const productRes = await useApiFetch<any>("products/update", {
+      const productRes = await useApiFetch<IProduct>("products/update", {
         method: "put",
         body: formData,
       })
 
-      console.log("productRes", productRes)
+      if (!productRes) {
+        throw new Error("Ошибка при изменении поста. Повторите позже")
+      }
 
-      data.push(productRes)
+      data.value.push(productRes)
 
-      return true
+      return productRes.id
     } catch (e) {
       console.log("e", e)
       error.value = ""
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function remove(producId: number) {
+    isLoading.value = true
+
+    try {
+      const productRes = await useApiFetch<any>(`products/delete/${producId}`, {
+        method: "delete",
+      })
+
+      if (!productRes) {
+        throw new Error("Ошибка при удалении поста. Повторите позже")
+      }
+
+      data.value = data.value.filter((product) => product.id !== producId)
+
+      return true
+    } catch (e: any) {
+      error.value = e.message ?? ""
       return false
     } finally {
       isLoading.value = false
@@ -197,6 +225,7 @@ export const useProductStore = defineStore("product", () => {
     error,
     isLoading,
     fetch,
+    remove,
     fetchByTitle,
     fetchByCategory,
     add,
