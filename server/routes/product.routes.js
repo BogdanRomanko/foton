@@ -3,7 +3,7 @@ const productController = require('../controllers/product.controller')
 const upload = require('../middleware/multer.middleware').uploadProducts
 const router = new Router()
 
-router.get('/get', productController.getProductById)
+router.get('/get/:id', productController.getProductById)
 router.get('/getAll', productController.getProducts)
 router.get('/getByPage', productController.getProductsByPage)
 router.get('/getByCategory', productController.getProductsByCategory)
