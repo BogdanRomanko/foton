@@ -1,10 +1,16 @@
 <script setup lang="ts">
-interface IProduct {
+export interface IBlock {
+  type: string
+  content: any
+}
+
+export interface IProduct {
   id: number
   title: string
   description: string
   image: string
   categoryId: number
+  blocks: IBlock[]
 }
 
 const url = import.meta.env.VITE_API
@@ -41,6 +47,8 @@ const {
     <p>
       {{ product.description }}
     </p>
+
+    <ProductBlocks :blocks="product.blocks" />
   </div>
 </template>
 

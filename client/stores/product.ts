@@ -1,3 +1,5 @@
+import type { productFormData } from "~/components/admin/product/form/index.vue"
+
 export const useProductStore = defineStore("product", () => {
   const data = reactive<any[]>([])
   const error = ref("")
@@ -128,7 +130,7 @@ export const useProductStore = defineStore("product", () => {
     hasMore.value = true
   }
 
-  async function add(productData: any) {
+  async function add(productData: productFormData) {
     isLoading.value = true
 
     try {
@@ -157,7 +159,7 @@ export const useProductStore = defineStore("product", () => {
     }
   }
 
-  async function edit(productData: any) {
+  async function edit(productData: productFormData) {
     isLoading.value = true
 
     try {

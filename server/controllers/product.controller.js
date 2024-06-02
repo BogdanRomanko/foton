@@ -163,6 +163,7 @@ class ProductController {
 
     async updateProduct(req, res, next) {
         try {
+            req.body.blocks = JSON.parse(req.body.blocks)
             const schema = Joi.object({
                 id: Joi.number().required(),
                 title: Joi.string().required(),

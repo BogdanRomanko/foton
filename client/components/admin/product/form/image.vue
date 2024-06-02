@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { image } = defineProps<{
-  image: string
+  image: string | undefined
 }>()
 
 const url = import.meta.env.VITE_API
