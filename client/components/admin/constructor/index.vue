@@ -1,60 +1,67 @@
 <script setup lang="ts">
+import type { IBlock } from "../../../pages/product/[id].vue"
 import type { VueComponent } from "@/types"
 import {
-  AdminBlockHeader,
-  AdminBlockCode,
-  AdminBlockList,
-  AdminBlockQuoute,
-  AdminBlockText,
-  AdminBlockSpace,
-  AdminBlockMedia,
-  AdminBlockSlider,
+  ProductBlockHeader,
+  ProductBlockCode,
+  ProductBlockList,
+  ProductBlockQuoute,
+  ProductBlockText,
+  ProductBlockSpace,
+  ProductBlockMedia,
+  ProductBlockSlider,
 } from "#components"
-
-interface IBlockContent {
-  block: string
-  content: any
-}
 
 interface ICreateBlock {
   component: VueComponent
-  ref?: { getData: () => IBlockContent }
+  initValue?: any
+  ref?: { getData: () => IBlock }
 }
 
 defineExpose({
   getBlocksContent,
 })
 
+const { initBlocks } = defineProps<{
+  initBlocks?: IBlock[]
+}>()
+
 const errorMessage = ref("")
 
-const blocks = new Map<string, VueComponent>([])
-blocks.set("title", AdminBlockHeader)
-blocks.set("text", AdminBlockText)
-blocks.set("quoute", AdminBlockQuoute)
-blocks.set("space", AdminBlockSpace)
-blocks.set("code", AdminBlockCode)
-blocks.set("list", AdminBlockList)
-blocks.set("media", AdminBlockMedia)
-blocks.set("slider", AdminBlockSlider)
+const blocks = new Map<string, any>([])
+blocks.set("header", ProductBlockHeader)
+blocks.set("text", ProductBlockText)
+blocks.set("quoute", ProductBlockQuoute)
+blocks.set("space", ProductBlockSpace)
+blocks.set("code", ProductBlockCode)
+blocks.set("list", ProductBlockList)
+blocks.set("media", ProductBlockMedia)
+blocks.set("slider", ProductBlockSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
 
-const createdBlocks = shallowReactive<Map<number, ICreateBlock>>(new Map())
+const createdBlocks = shallowReactive<Map<string, ICreateBlock>>(new Map())
 
-function removeBlock(key: number) {
+initBlocksList()
+function initBlocksList() {
+  if (!initBlocks) return
+  initBlocks.forEach((block) => selectBlock(block.type, block.content))
+}
+
+function removeBlock(key: string) {
   createdBlocks.delete(key)
 }
 
-function selectBlock(block: string) {
+function selectBlock(block: string, initValue?: any) {
   const component = blocks.get(block)
   if (!component) return
 
-  const id = new Date().getTime()
+  const id = Math.random().toString(16).slice(2)
 
-  createdBlocks.set(id, { component })
+  createdBlocks.set(id, { component, initValue })
 }
 
-const setBlockRef = (el: any, key: number) => {
+const setBlockRef = (el: any, key: string) => {
   const blockComponent = createdBlocks.get(key)
   if (!blockComponent) return
   blockComponent.ref = el
@@ -93,6 +100,7 @@ function getBlocksContent() {
       :key="postBlock[0]"
       :component="postBlock[1].component"
       :data-id="postBlock[0]"
+      :init-content="postBlock[1].initValue"
       @remove-block="removeBlock"
       @set-block-ref="setBlockRef"
     />
