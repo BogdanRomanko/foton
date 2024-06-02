@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { object, string, type InferType, mixed, number } from "yup"
 import type { FormSubmitEvent } from "#ui/types"
+import type { IProduct } from "../../../../pages/product/[id].vue"
 
 const productStore = useProductStore()
 const categoryStore = useCategoryStore()
@@ -10,34 +11,24 @@ provide("files", files)
 
 const blockConstructor = ref()
 
-const { title, description, categoryId, image, type, id } = withDefaults(
+const { productData, type } = withDefaults(
   defineProps<{
-    title?: string
-    description?: string
-    image?: string
-    categoryId?: number
+    productData?: IProduct | null
     type?: "Создать" | "Изменить"
-    id?: number
   }>(),
   {
-    title: "",
-    description: "",
-    image: "",
-    categoryId: 0,
     type: "Создать",
-    id: 0,
+    productData: null,
   },
 )
-
-const fileRef = ref()
 
 useAsyncData(() => categoryStore.fetch())
 
 const state = reactive({
-  title,
-  description,
+  title: productData?.title ?? "",
+  description: productData?.description ?? "",
   image: files,
-  categoryId,
+  categoryId: productData?.categoryId ?? "",
 })
 
 function imageFilter() {
@@ -85,6 +76,7 @@ const schema = object().shape({
 })
 
 type Schema = InferType<typeof schema>
+export type productFormData = Schema & { id?: number; blocks: any }
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
   if (type === "Создать") onSubmitCreate(event)
@@ -92,26 +84,21 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   else console.error("unknown product type form")
 }
 
-type productData = Schema & { blocks: any }
-
 function onSubmitCreate(event: FormSubmitEvent<Schema>) {
-  const createdData: productData = {
+  productStore.add({
     ...event.data,
     blocks: blockConstructor.value.getBlocksContent(),
     ...(event.data.image.length === 1 && { image: event.data.image[0] }),
-  }
-
-  productStore.add(createdData)
+  })
 }
 function onSubmitEdit(event: FormSubmitEvent<Schema>) {
   const { image, ...data } = event.data
 
-  console.log(image)
-
   productStore.edit({
-    id,
+    id: productData?.id,
     ...data,
     ...(image.length === 1 && { image: image[0] }),
+    blocks: blockConstructor.value.getBlocksContent(),
   })
 }
 </script>
@@ -133,7 +120,7 @@ function onSubmitEdit(event: FormSubmitEvent<Schema>) {
       </UFormGroup>
 
       <UFormGroup label="Лого" name="image">
-        <AdminProductFormImage :image="image" />
+        <AdminProductFormImage :image="productData?.image" />
       </UFormGroup>
 
       <UFormGroup label="Category" name="categoryId">
@@ -145,7 +132,12 @@ function onSubmitEdit(event: FormSubmitEvent<Schema>) {
           option-attribute="title"
         />
       </UFormGroup>
-      <AdminConstructor ref="blockConstructor" />
+      <ClientOnly>
+        <AdminConstructor
+          ref="blockConstructor"
+          :init-blocks="productData?.blocks"
+        />
+      </ClientOnly>
       <UButton type="submit"> {{ type }} </UButton>
     </UForm>
   </div>
