@@ -3,6 +3,13 @@ defineExpose({
   getData,
 })
 
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 const files = reactive([])
 provide("files", files)
 
@@ -10,7 +17,7 @@ function getData() {
   if (!files.length) return
 
   return {
-    block: "slider",
+    type: "slider",
     content: files,
   }
 }
@@ -21,7 +28,7 @@ function getFilesListSrc() {
 </script>
 
 <template>
-  <UiFileUpload />
+  <UiFileUpload v-if="isEdit" />
   <UCarousel
     v-if="files.length > 0"
     v-slot="{ item }"

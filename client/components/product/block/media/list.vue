@@ -4,11 +4,12 @@ import type { IFile } from "./upload.vue"
 const media = inject<IFile[]>("media", [])
 
 function removeUploadImg(index: number) {
-  const removeFile = media[index]
+  // TODO: Remove files
+  // const removeFile = media[index]
 
-  useApiFetch(`/file/delete/${removeFile.id}`, {
-    method: "delete",
-  })
+  // useApiFetch(`/file/delete/${removeFile.id}`, {
+  //   method: "delete",
+  // })
 
   media.splice(index, 1)
 }

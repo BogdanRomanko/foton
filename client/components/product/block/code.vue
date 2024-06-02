@@ -2,6 +2,13 @@
 import hljs from "highlight.js"
 import "highlight.js/styles/atom-one-dark.min.css"
 
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 defineExpose({
   getData,
 })
@@ -20,7 +27,7 @@ function getData() {
   if (!code.value) return
 
   return {
-    block: "code",
+    type: "code",
     content: code.value,
   }
 }
@@ -37,7 +44,7 @@ function onInput(e: Event) {
       :class="$style.selectMenu"
       :options="languages"
     />
-    <pre><code contenteditable="true" @input="onInput" v-html="hihgtlighCode.value"></code></pre>
+    <pre><code :contenteditable="isEdit" @input="onInput" v-html="hihgtlighCode.value"></code></pre>
   </div>
 </template>
 

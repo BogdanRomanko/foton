@@ -5,7 +5,8 @@ defineExpose({
 
 function getData() {
   return {
-    block: "space",
+    type: "space",
+    content: "",
   }
 }
 </script>

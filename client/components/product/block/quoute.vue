@@ -2,6 +2,14 @@
 defineExpose({
   getData,
 })
+
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 const text = ref("")
 const author = ref("")
 
@@ -11,7 +19,7 @@ function getData() {
   return {
     block: "quoute",
     content: {
-      text: text.value,
+      type: text.value,
       author: author.value,
     },
   }
@@ -31,13 +39,13 @@ function onInputAuthor(e: Event) {
     <p
       :class="$style.text"
       placeholder="Текст цитаты"
-      contenteditable="true"
+      :contenteditable="isEdit"
       @input="onInputText"
     ></p>
     <p
       :class="$style.author"
       placeholder="Подпись"
-      contenteditable="true"
+      :contenteditable="isEdit"
       @input="onInputAuthor"
     ></p>
   </blockquote>

@@ -3,13 +3,20 @@ defineExpose({
   getData,
 })
 
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 const content = ref()
 
 function getData() {
   if (!content.value) return
 
   return {
-    block: "list",
+    type: "list",
     content: content.value,
   }
 }
@@ -45,7 +52,7 @@ function onKeyUp(event: any) {
 
 <template>
   <ul
-    contenteditable="true"
+    :contenteditable="isEdit"
     class="test"
     :class="$style.test"
     @keydown="onKeyDown"

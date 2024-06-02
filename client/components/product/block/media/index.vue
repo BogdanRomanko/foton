@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import type { IFile } from "./upload.vue"
 
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 defineExpose({
   getData,
 })
@@ -14,14 +21,14 @@ function getData() {
   const idList = media.map((file) => file.id)
 
   return {
-    block: "media",
+    type: "media",
     content: idList,
   }
 }
 </script>
 
 <template>
-  <AdminBlockMediaUpload />
+  <AdminBlockMediaUpload v-if="isEdit" />
   <AdminBlockMediaList />
 </template>
 

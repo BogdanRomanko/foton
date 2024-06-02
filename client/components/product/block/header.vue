@@ -3,13 +3,20 @@ defineExpose({
   getData,
 })
 
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 const text = ref("")
 
 function getData() {
   if (!text.value) return
 
   return {
-    block: "header",
+    type: "header",
     content: text.value,
   }
 }
@@ -21,7 +28,7 @@ function onInput(e: Event) {
 
 <template>
   <!-- Заголовок 1 -->
-  <h1 placeholder="Заголовок 1" contenteditable="true" @input="onInput"></h1>
+  <h1 placeholder="Заголовок 1" :contenteditable="isEdit" @input="onInput"></h1>
 </template>
 
 <style lang="scss" scoped>

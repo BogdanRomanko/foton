@@ -3,13 +3,20 @@ defineExpose({
   getData,
 })
 
+const { isEdit } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+  }>(),
+  { isEdit: false },
+)
+
 const text = ref("")
 
 function getData() {
   if (!text.value) return
 
   return {
-    block: "text",
+    type: "text",
     content: text.value,
   }
 }
@@ -33,7 +40,7 @@ function onKeyUp(event: any) {
 <template>
   <p
     placeholder="Введите текст"
-    contenteditable="true"
+    :contenteditable="isEdit"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
   ></p>
