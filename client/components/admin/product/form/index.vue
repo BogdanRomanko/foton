@@ -8,6 +8,8 @@ const categoryStore = useCategoryStore()
 const files = reactive([])
 provide("files", files)
 
+const blockConstructor = ref()
+
 const { title, description, categoryId, image, type, id } = withDefaults(
   defineProps<{
     title?: string
@@ -90,11 +92,16 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   else console.error("unknown product type form")
 }
 
+type productData = Schema & { blocks: any }
+
 function onSubmitCreate(event: FormSubmitEvent<Schema>) {
-  productStore.add({
+  const createdData: productData = {
     ...event.data,
-    image: fileRef.value.input.files[0],
-  })
+    blocks: blockConstructor.value.getBlocksContent(),
+    ...(event.data.image.length === 1 && { image: event.data.image[0] }),
+  }
+
+  productStore.add(createdData)
 }
 function onSubmitEdit(event: FormSubmitEvent<Schema>) {
   const { image, ...data } = event.data
@@ -138,7 +145,7 @@ function onSubmitEdit(event: FormSubmitEvent<Schema>) {
           option-attribute="title"
         />
       </UFormGroup>
-      <AdminConstructor />
+      <AdminConstructor ref="blockConstructor" />
       <UButton type="submit"> {{ type }} </UButton>
     </UForm>
   </div>
