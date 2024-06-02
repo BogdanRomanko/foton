@@ -2,11 +2,12 @@
 import hljs from "highlight.js"
 import "highlight.js/styles/atom-one-dark.min.css"
 
-const { isEdit } = withDefaults(
+const { isEdit, content } = withDefaults(
   defineProps<{
     isEdit?: boolean
+    content?: string
   }>(),
-  { isEdit: false },
+  { isEdit: false, content: "" },
 )
 
 defineExpose({
@@ -15,9 +16,7 @@ defineExpose({
 
 const languages = ["JAVASCRIPT", "PHP", "PYTHON", "RUST", "JAVA"]
 const selectedLanguage = ref(languages[0])
-const code = ref(
-  'console.log("enter", event)\nconst target = event.target\nconst lastChild = target.lastChild\nconsole.log("la", lastChild.textContent)\nconst text = lastChild.textContent)',
-)
+const code = ref(content)
 
 const hihgtlighCode = computed(() =>
   hljs.highlight(code.value, { language: selectedLanguage.value }),

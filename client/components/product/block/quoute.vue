@@ -1,25 +1,37 @@
 <script setup lang="ts">
+interface IQuouteContent {
+  text: string
+  author: string
+}
+
 defineExpose({
   getData,
 })
 
-const { isEdit } = withDefaults(
+const { isEdit, content } = withDefaults(
   defineProps<{
     isEdit?: boolean
+    content?: IQuouteContent
   }>(),
-  { isEdit: false },
+  {
+    isEdit: false,
+    content: () => ({
+      text: "",
+      author: "",
+    }),
+  },
 )
 
-const text = ref("")
-const author = ref("")
+const text = ref(content.text)
+const author = ref(content.author)
 
 function getData() {
   if (!text.value || !author.value) return
 
   return {
-    block: "quoute",
+    type: "quoute",
     content: {
-      type: text.value,
+      text: text.value,
       author: author.value,
     },
   }
@@ -38,14 +50,14 @@ function onInputAuthor(e: Event) {
   <blockquote :class="$style.quote">
     <p
       :class="$style.text"
-      placeholder="Текст цитаты"
-      :contenteditable="isEdit"
+      :placeholder="isEdit ? 'Текст цитаты' : undefined"
+      :contenteditable="isEdit || undefined"
       @input="onInputText"
     ></p>
     <p
       :class="$style.author"
-      placeholder="Подпись"
-      :contenteditable="isEdit"
+      :placeholder="isEdit ? 'Подпись' : undefined"
+      :contenteditable="isEdit || undefined"
       @input="onInputAuthor"
     ></p>
   </blockquote>

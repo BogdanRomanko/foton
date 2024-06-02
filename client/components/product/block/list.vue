@@ -3,14 +3,15 @@ defineExpose({
   getData,
 })
 
-const { isEdit } = withDefaults(
+const { isEdit, content: initContent } = withDefaults(
   defineProps<{
     isEdit?: boolean
+    content?: string
   }>(),
-  { isEdit: false },
+  { isEdit: false, content: "<li></li>" },
 )
 
-const content = ref()
+const content = ref(initContent)
 
 function getData() {
   if (!content.value) return
@@ -52,14 +53,13 @@ function onKeyUp(event: any) {
 
 <template>
   <ul
-    :contenteditable="isEdit"
+    :contenteditable="isEdit || undefined"
     class="test"
     :class="$style.test"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
-  >
-    <li></li>
-  </ul>
+    v-html="initContent"
+  ></ul>
 </template>
 
 <style lang="scss" module>
