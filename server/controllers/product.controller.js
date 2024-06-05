@@ -190,7 +190,9 @@ class ProductController {
                 req.body.categoryId
             )
 
-            const t = [...req.body.blocks].map(block => block.productId = req.body.id)
+            req.body.blocks.forEach(block => {
+                block.productId = req.body.id
+            })
 
             const blocks = await blocksService.updateBlocks(req.body.blocks)
             data.blocks = blocks
