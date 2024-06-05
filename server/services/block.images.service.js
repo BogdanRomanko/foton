@@ -4,46 +4,25 @@ const Path = require('path')
 
 class BlockImagesService {
 
-    async getBlockImages(blockId) {
-        return await blockImagesModel.getBlockImages(parseInt(blockId))
+    async getImage(id) {
+        return await blockImagesModel.getImage(parseInt(id))
     }
 
-    async addImage(path, blockId) {
-        return await blockImagesModel.addImage(path, parseInt(blockId))
+    async addImage(path) {
+        return await blockImagesModel.addImage(path)
     }
 
     async deleteImage(id) {
+        const path = await blockImagesModel.getImage(parseInt(id))
+        await this.deleteImagesFS(path)
         return await blockImagesModel.deleteImage(parseInt(id))
     }
 
-    async deleteImages(blockId) {
-        const images = await this.getBlockImages(parseInt(blockId))
-        const paths = []
-
-        images.forEach(image => {
-            paths.push(image.path)
-        })
-
-        this.deleteImagesFS(paths)
-
-        return await blockImagesModel.deleteBlockImages(parseInt(blockId))
-    }
-
-    async deleteManyBlockImages(data) {
-        data.forEach(item => {
-            this.deleteImages(parseInt(item.id))
-        })
-    }
-
-    async updateImage(id, path, blockId) {
-        return await blockImagesModel.updateImage(parseInt(id), path, parseInt(blockId))
+    async updateImage(id, path) {
+        return await blockImagesModel.updateImage(parseInt(id), path)
     }
 
     async updateImages(data, blockId) {
-        data.forEach(item => {
-            item.blockId = blockId
-        })
-
         return await blockImagesModel.updateImages(data)
     }
 

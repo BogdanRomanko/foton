@@ -171,8 +171,10 @@ class ProductController {
                 image: Joi.any().meta({swaggerType: 'file'}).optional(),
                 categoryId: Joi.number().required(),
                 blocks: Joi.array().items({
+                    id: Joi.number().required(),
                     type: Joi.string().required(),
-                    content: Joi.string().required()
+                    content: Joi.string().required(),
+                    productId: Joi.number().required()
                 })
             })
             const {error} = schema.validate(req.body)
@@ -188,7 +190,7 @@ class ProductController {
                 req.body.categoryId
             )
 
-            const blocks = await blocksService.addBlocks(req.body.blocks, data.id)
+            const blocks = await blocksService.updateBlocks(req.body.blocks)
             data.blocks = blocks
 
             res.json(data)
@@ -199,29 +201,38 @@ class ProductController {
 
     async saveImages(req, res, next) {
         try {
-            req.files.forEach(image => {
-                imagesService.addImage(image.path, req.body.blockId)
+            const schema = Joi.array().items({
+                image: Joi.any().meta({swaggerType: 'file'}).required()
             })
 
-            const data = await imagesService.getBlockImages(req.body.blockId)
+            const {error} = schema.validate(req.body)
 
-            res.json(data)
+            if (error)
+                throw apiError.HttpException(error.details[0].message)
+
+            const res = null
+            req.files.forEach(image => {
+                res = imagesService.addImage(image.path)
+            })
+
+            res.json(res)
         } catch (e) {
             next(e)
         }
     }
 
-    async deleteImages(req, res, next) {
+    async saveImage(req, res, next) {
         try {
             const schema = Joi.object({
-                blockId: Joi.number().required()
+                image: Joi.any().meta({swaggerType: 'file'}).required()
             })
-            const {error} = schema.validate(req.query)
+
+            const {error} = schema.validate(req.body)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await imagesService.deleteImages(req.query.blockId)
+            const data = await imagesService.addImage(req.file.path)
 
             res.json(data)
         } catch (e) {

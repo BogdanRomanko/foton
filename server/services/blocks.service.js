@@ -30,7 +30,7 @@ class BlocksService {
         var res
 
         if (block.type === 'media') {
-            await imagesService.deleteImages(parseInt(blockId))
+            await imagesService.deleteImage(parseInt(block.content))
             res = await blockModel.deleteBlock(parseInt(blockId))
         }
         else

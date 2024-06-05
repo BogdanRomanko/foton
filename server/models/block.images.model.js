@@ -3,47 +3,29 @@ const client = new PrismaClient()
 
 class BlockImagesModel {
 
-    async getBlockImages(blockId) {
+    async getImage(id) {
         try {
             await client.$connect()
-            const images = await client.blockImages.findMany({
+            const image = await client.blockImages.findUnique({
                 where: {
-                    blockId: blockId
+                    id: id
                 }
             })
             await client.$disconnect()
 
-            return images
+            return image
         } catch (e) {
             console.error(e)
             await client.$disconnect()
         }
     }
 
-    async addImage(path, blockId) {
+    async addImage(path) {
         try {
             await client.$connect()
             const res = await client.blockImages.create({
                 data: {
-                    path: path,
-                    blockId: blockId
-                }
-            })
-            await client.$disconnect()
-
-            return res
-        } catch (e) {
-            console.error(e)
-            await client.$disconnect()
-        }
-    }
-
-    async deleteBlockImages(blockId) {
-        try {
-            await client.$connect()
-            const res = await client.blockImages.deleteMany({
-                where: {
-                    blockId: blockId
+                    path: path
                 }
             })
             await client.$disconnect()
@@ -72,7 +54,7 @@ class BlockImagesModel {
         }
     }
 
-    async updateImage(id, path, blockId) {
+    async updateImage(id, path) {
         try {
             await client.$connect()
             const res = await client.blockImages.update({
@@ -80,8 +62,7 @@ class BlockImagesModel {
                     id: id
                 },
                 data: {
-                    path: path,
-                    blockId: blockId
+                    path: path
                 }
             })
             await client.$disconnect()
@@ -97,7 +78,7 @@ class BlockImagesModel {
         try {
             var res = []
             data.forEach(cur => {
-                res.push(this.updateImage(parseInt(cur.id), cur.path, parseInt(cur.blockId)))
+                res.push(this.updateImage(parseInt(cur.id), cur.path))
             })
 
             return res.length

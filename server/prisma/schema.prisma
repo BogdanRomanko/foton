@@ -56,17 +56,14 @@ enum Role {
 }
 
 model ProductBlocks {
-  id            Int           @id @default(autoincrement())
-  type          String
-  content       String
-  product       Products      @relation(fields: [productId], references: [id])
-  productId     Int
-  ProductImages BlockImages[]
+  id        Int      @id @default(autoincrement())
+  type      String
+  content   String
+  product   Products @relation(fields: [productId], references: [id])
+  productId Int
 }
 
 model BlockImages {
-  id      Int           @id @default(autoincrement())
-  path    String
-  block   ProductBlocks @relation(fields: [blockId], references: [id])
-  blockId Int
+  id   Int    @id @default(autoincrement())
+  path String
 }
