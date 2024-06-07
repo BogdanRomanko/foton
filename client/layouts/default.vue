@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const langingStore = useLangingStore()
 
-await useAsyncData("langing", () => langingStore.fetch(), {
+await useAsyncData(async () => await langingStore.fetch(), {
   server: true,
 })
 </script>

@@ -6,7 +6,7 @@ defineExpose({
 function getData() {
   return {
     type: "space",
-    content: "",
+    content: "-",
   }
 }
 </script>

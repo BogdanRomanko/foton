@@ -20,21 +20,15 @@ watch(
   },
 )
 
-await useAsyncData(
-  "posts",
-  async () => {
-    if (route.query.search) {
-      await productStore.fetchByTitle(route.query.search as string)
-    } else if (route.query.category) {
-      await productStore.fetchByCategory(route.query.category as string)
-    } else {
-      await productStore.fetch({ isRewrite: true })
-    }
-  },
-  {
-    server: true,
-  },
-)
+await useAsyncData(async () => {
+  if (route.query.search) {
+    await productStore.fetchByTitle(route.query.search as string)
+  } else if (route.query.category) {
+    await productStore.fetchByCategory(route.query.category as string)
+  } else {
+    await productStore.fetch({ isRewrite: true })
+  }
+})
 </script>
 
 <template>
