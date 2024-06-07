@@ -22,10 +22,14 @@ export const useCategoryStore = defineStore("category", () => {
     try {
       const res = await useApiFetch<ICategory[]>("categories/getAll")
 
+      if (!res) {
+        throw new Error("Ошибка получения списка категорий. Повторите позже")
+      }
+
       data.push(...res)
       return true
-    } catch (e) {
-      error.value = ""
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -41,11 +45,15 @@ export const useCategoryStore = defineStore("category", () => {
         body: { ...categoryData },
       })
 
+      if (!commentData) {
+        throw new Error("Ошибка добавления новой категории. Повторите позже")
+      }
+
       data.push(commentData)
 
       return true
-    } catch (e) {
-      error.value = ""
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -103,8 +111,8 @@ export const useCategoryStore = defineStore("category", () => {
       })
 
       return true
-    } catch (e) {
-      error.value = ""
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false

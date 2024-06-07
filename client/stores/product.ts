@@ -14,12 +14,12 @@ export const useProductStore = defineStore("product", () => {
 
   const categoryStore = useCategoryStore()
 
-  interface q {
+  interface IFetchData {
     isRewrite?: boolean
     params?: { keyword?: string; category?: string }
   }
 
-  async function fetch({ isRewrite, params }: q = {}) {
+  async function fetch({ isRewrite, params }: IFetchData = {}) {
     isLoading.value = true
 
     try {
@@ -31,8 +31,7 @@ export const useProductStore = defineStore("product", () => {
       })
 
       if (!res || !res[0].products) {
-        error.value = "Error receiving articles. Try later"
-        return
+        throw new Error("Ошибка получения статей. Повторите позже")
       }
 
       if (res[1].count) {
@@ -46,8 +45,8 @@ export const useProductStore = defineStore("product", () => {
       data.value.push(...res[0].products)
 
       return true
-    } catch (e) {
-      error.value = "Unexpected error. Try later"
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -65,8 +64,7 @@ export const useProductStore = defineStore("product", () => {
       })
 
       if (!res) {
-        error.value = "Error receiving articles. Try later"
-        return
+        throw new Error("Ошибка получения статей. Повторите позже")
       }
 
       data.value.length = 0
@@ -74,8 +72,8 @@ export const useProductStore = defineStore("product", () => {
       data.value.push(...res)
 
       return true
-    } catch (e) {
-      error.value = "Unexpected error. Try later"
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -107,8 +105,7 @@ export const useProductStore = defineStore("product", () => {
       })
 
       if (!res) {
-        error.value = "Error receiving articles. Try later"
-        return
+        throw new Error("Ошибка получения статей. Повторите позже")
       }
 
       data.value.length = 0
@@ -117,7 +114,7 @@ export const useProductStore = defineStore("product", () => {
 
       return true
     } catch (e: any) {
-      error.value = e.message ?? "Unexpected error. Try later"
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -153,9 +150,8 @@ export const useProductStore = defineStore("product", () => {
       data.value.push(productRes)
 
       return productRes.id
-    } catch (e) {
-      console.log("e", e)
-      error.value = ""
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -184,9 +180,8 @@ export const useProductStore = defineStore("product", () => {
       data.value.push(productRes)
 
       return productRes.id
-    } catch (e) {
-      console.log("e", e)
-      error.value = ""
+    } catch (e: any) {
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -209,7 +204,7 @@ export const useProductStore = defineStore("product", () => {
 
       return true
     } catch (e: any) {
-      error.value = e.message ?? ""
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false

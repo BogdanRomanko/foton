@@ -63,7 +63,7 @@ export const useLangingStore = defineStore("langing", () => {
         },
       }
     } catch (e: any) {
-      error.value = e.message
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
@@ -83,7 +83,7 @@ export const useLangingStore = defineStore("langing", () => {
         throw new Error("Непредвиденная ошибка. Повторите позже")
       }
     } catch (e: any) {
-      error.value = e.message
+      error.value = e.message ?? "Непредвиденная ошибка. Повторите позже"
       return false
     } finally {
       isLoading.value = false
