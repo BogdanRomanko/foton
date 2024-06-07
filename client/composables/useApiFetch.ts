@@ -11,7 +11,7 @@ export function useApiFetch<T>(
   const authStore = useAuthStore()
 
   const defaults: ReqOptions = {
-    baseURL: "http://localhost:3000",
+    baseURL: import.meta.env.VITE_API,
     retry: 1,
     retryStatusCodes: [401],
     credentials: "include",
