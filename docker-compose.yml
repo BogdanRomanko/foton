@@ -1,37 +1,24 @@
-version: '3.9'
+version: '3.8'
 services:
-  server: 
+  server:
     build: ./server
-    container_name: server_backend
-    ports: 
-      - '3000:3000'
-  
-  client: 
-    build: ./client
-    container_name: server_frontend
-    network_mode: host
+    depends_on:
+      - database
+    networks:
+      - app
+
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     depends_on:
       - server
-  
-  gateway:
-    image: php:7.2-apache
-    ports:
-      - "8081:80"
-    volumes:
-      - ./client/gateway:/var/www/html
     networks:
-      - app-network
-
-  sub:
-    image: php:7.2-apache
-    volumes:
-      - ./client/sub:/var/www/html
-    networks:
-      - app-network
+      - app
 
   nginx:
     image: nginx:latest
-    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
@@ -39,14 +26,14 @@ services:
       - ./wwwroot/nginx.conf:/etc/nginx/nginx.conf
       - ./wwwroot/ssl:/etc/nginx/ssl
     depends_on:
-      - gateway
-      - sub
+      - server
+      - client
     networks:
-      - app-network
+      - app
+
 
   database:
     image: postgres:alpine3.19
-    container_name: db
     restart: unless-stopped
     shm_size: 128mb
     ports:
@@ -56,7 +43,6 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_DB=fotondb
     volumes:
-      - ../2. Init Database:/docker-entrypoint-initdb.d
       - foton-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
@@ -70,12 +56,10 @@ services:
           cpus: '1'
           memory: 1G
     networks:
-      - postgres
+      - app
 
 volumes:
   foton-data:
 
 networks:
-  postgres:
-    driver: bridge
-  app-network:
+  app:
