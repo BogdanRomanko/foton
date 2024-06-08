@@ -4,8 +4,10 @@
     "description": "foton app in nodejs",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --env-file='.env.dev' --inspect -L index.js",
-        "start": "node --env-file='.env.production' -L index.js"
+        "dev": "node --env-file='.env.dev' index.js",
+        "dev:watch": "nodemon --env-file='.env.dev' --inspect -L index.js",
+        "start": "node --env-file='.env.production' -L index.js",
+        "migrate:postgres": "dotenv -e .env.dev -- npx prisma migrate dev"
     },
     "author": "Bogdan Romanko",
     "license": "ISC",
