@@ -13,8 +13,9 @@ class BlockImagesService {
     }
 
     async deleteImage(id) {
+
         const path = await blockImagesModel.getImage(parseInt(id))
-        await this.deleteImagesFS(path)
+        await this.deleteImagesFS([path.path])
         return await blockImagesModel.deleteImage(parseInt(id))
     }
 
