@@ -14,15 +14,29 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div>
+  <div class="block-container">
     <component
       :is="component"
       :ref="(el) => emit('setBlockRef', el, dataId)"
       is-edit
       :content="initContent"
     />
-    <button @click="() => emit('removeBlock', dataId)">X</button>
+    <button class="block-btn" @click="() => emit('removeBlock', dataId)">
+      X
+    </button>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.block-container {
+  position: relative;
+  margin: 20px 0;
+}
+
+.block-btn {
+  position: absolute;
+  top: 0;
+  left: -30px;
+  font-size: 20px;
+}
+</style>
