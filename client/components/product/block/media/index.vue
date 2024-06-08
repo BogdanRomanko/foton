@@ -1,35 +1,41 @@
 <script setup lang="ts">
-import type { IFile } from "./upload.vue"
+export interface IFile {
+  path: string
+  id: number
+}
 
-const { isEdit } = withDefaults(
+export type FileData = IFile | File
+
+export type MediaMap = Map<string, FileData>
+
+const { isEdit, type } = withDefaults(
   defineProps<{
     isEdit?: boolean
+    type: "file" | "slider"
+    content?: string[]
   }>(),
-  { isEdit: false },
+  { isEdit: false, type: "file", content: () => [] },
 )
 
 defineExpose({
   getData,
 })
 
-const media = reactive<IFile[]>([])
+const media = reactive<MediaMap>(new Map())
 provide("media", media)
 
 function getData() {
-  if (!media.length) return
+  if (!media.size) return
 
-  const idList = media.map((file) => file.id)
+  const idList = [...media.keys()]
 
-  return {
-    type: "media",
-    content: idList,
-  }
+  return JSON.stringify(idList)
 }
 </script>
 
 <template>
-  <AdminBlockMediaUpload v-if="isEdit" />
-  <AdminBlockMediaList />
+  <ProductBlockMediaUpload v-if="isEdit" :multiple="type === 'slider'" />
+  <ProductBlockMediaList />
 </template>
 
 <style lang="scss" scoped></style>

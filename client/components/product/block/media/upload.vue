@@ -1,47 +1,42 @@
 <script setup lang="ts">
-export interface IFile {
-  authorId: string
-  fileName: string
-  id: string
-  mimetype: string
-}
-const media = inject<IFile[]>("media", [])
+import type { MediaMap } from "./index.vue"
+
+const { multiple } = defineProps<{
+  multiple: boolean
+}>()
+
+const media = inject<MediaMap>("media", new Map())
 
 function removeFileList() {
-  // TODO: Remove files
-  // media.forEach((file) =>
-  //   useApiFetch(`/file/delete/${file.id}`, {
-  //     method: "delete",
-  //   }),
-  // )
+  media.forEach((file) => {
+    if ("id" in file) {
+      useApiFetch(`/products/deleteImage/${file.id}`, {
+        method: "delete",
+      })
+    }
+  })
 }
 
-async function onUploadFiles(files: FileList, multiple?: boolean) {
-  const formData = new FormData()
-  Array.from(files).forEach((file) => formData.append("image", file))
-
-  const res = await useApiFetch<IFile[]>("/products/saveImages", {
-    method: "post",
-    body: formData,
-  })
-
-  if (!res || !Array.isArray(res)) return
-
+function onUploadFiles(files: FileList, multiple?: boolean) {
   if (!multiple) {
     removeFileList()
-    media.length = 0
+    media.clear()
   }
 
-  media.push(...res)
+  Array.from(files).forEach((file) => {
+    const id = randomId()
+
+    media.set(id, file)
+  })
 }
 
 onUnmounted(() => {
-  removeFileList()
+  // removeFileList()
 })
 </script>
 
 <template>
-  <UiFileUpload @upload="onUploadFiles" />
+  <UiFileUpload :multiple="multiple" @upload="onUploadFiles" />
 </template>
 
 <style lang="scss" scoped></style>
