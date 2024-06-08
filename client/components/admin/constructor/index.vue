@@ -8,7 +8,7 @@ import {
   ProductBlockQuoute,
   ProductBlockText,
   ProductBlockSpace,
-  ProductBlockMedia,
+  ProductBlockFile,
   ProductBlockSlider,
 } from "#components"
 
@@ -35,7 +35,7 @@ blocks.set("quoute", ProductBlockQuoute)
 blocks.set("space", ProductBlockSpace)
 blocks.set("code", ProductBlockCode)
 blocks.set("list", ProductBlockList)
-blocks.set("media", ProductBlockMedia)
+blocks.set("file", ProductBlockFile)
 blocks.set("slider", ProductBlockSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
@@ -56,7 +56,7 @@ function selectBlock(block: string, initValue?: any) {
   const component = blocks.get(block)
   if (!component) return
 
-  const id = Math.random().toString(16).slice(2)
+  const id = randomId()
 
   createdBlocks.set(id, { component, initValue })
 }
