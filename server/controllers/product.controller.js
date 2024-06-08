@@ -205,21 +205,29 @@ class ProductController {
 
     async saveImages(req, res, next) {
         try {
-            const schema = Joi.array().items({
-                image: Joi.any().meta({swaggerType: 'file'}).required()
-            })
+            // const schema = Joi.array().items({
+            //     image: Joi.any().meta({swaggerType: 'file'}).required()
+            // })
 
-            const {error} = schema.validate(req.body)
+            // const {error} = schema.validate(req.body)
 
-            if (error)
-                throw apiError.HttpException(error.details[0].message)
+            // if (error)
+            //     throw apiError.HttpException(error.details[0].message)
 
-            const res = null
-            req.files.forEach(image => {
-                res = imagesService.addImage(image.path)
-            })
 
-            res.json(res)
+            const { files } = req
+
+            const createPromiseFiles = files.map((file) => {
+                console.log(file)
+                return imagesService.addImage(file.path)
+              })
+
+              const createdFiles = await Promise.all(createPromiseFiles)
+
+
+              console.log(createdFiles)
+
+            res.json(createdFiles)
         } catch (e) {
             next(e)
         }
@@ -227,14 +235,14 @@ class ProductController {
 
     async saveImage(req, res, next) {
         try {
-            const schema = Joi.object({
-                image: Joi.any().meta({swaggerType: 'file'}).required()
-            })
+            // const schema = Joi.object({
+            //     image: Joi.any().meta({swaggerType: 'file'}).required()
+            // })
 
-            const {error} = schema.validate(req.body)
+            // const {error} = schema.validate(req.body)
 
-            if (error)
-                throw apiError.HttpException(error.details[0].message)
+            // if (error)
+            //     throw apiError.HttpException(error.details[0].message)
 
             const data = await imagesService.addImage(req.file.path)
 
@@ -249,12 +257,12 @@ class ProductController {
             const schema = Joi.object({
                 id: Joi.number().required()
             })
-            const {error} = schema.validate(req.query)
+            const {error} = schema.validate(req.params)
 
             if (error)
                 throw apiError.HttpException(error.details[0].message)
 
-            const data = await imagesService.deleteImage(req.query.id)
+            const data = await imagesService.deleteImage(req.params.id)
 
             res.json(data)
         } catch (e) {
