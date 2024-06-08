@@ -1,35 +1,14 @@
 <script setup lang="ts">
-defineExpose({
-  getData,
-})
+const { content } = defineProps<{
+  content: string
+}>()
 
-const { isEdit, content } = withDefaults(
-  defineProps<{
-    isEdit?: boolean
-    content?: string[]
-  }>(),
-  { isEdit: false, content: () => [] },
-)
-
-const media = ref()
-
-function getData() {
-  if (!media.value) return
-
-  return {
-    type: "file",
-    content: media.value.getData(),
-  }
-}
+const url = import.meta.env.VITE_API
+const filePath = JSON.parse(content)[0]
 </script>
 
 <template>
-  <ProductBlockMedia
-    ref="media"
-    type="file"
-    :is-edit="isEdit"
-    :content="content"
-  />
+  <img v-if="filePath" :src="`${url}/${filePath}`" />
 </template>
 
 <style lang="scss" scoped></style>

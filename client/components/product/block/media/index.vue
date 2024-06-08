@@ -27,15 +27,24 @@ provide("media", media)
 function getData() {
   if (!media.size) return
 
-  const idList = [...media.keys()]
+  const filesList = [...media.values()]
 
-  return JSON.stringify(idList)
+  const pathList = filesList.reduce((list: string[], file: FileData) => {
+    if ("path" in file) {
+      list.push(file.path)
+    }
+
+    return list
+  }, [])
+
+  return JSON.stringify(pathList)
 }
 </script>
 
 <template>
   <ProductBlockMediaUpload v-if="isEdit" :multiple="type === 'slider'" />
   <ProductBlockMediaList />
+  {{ media }}
 </template>
 
 <style lang="scss" scoped></style>

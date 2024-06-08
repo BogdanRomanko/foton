@@ -8,8 +8,8 @@ import {
   ProductBlockQuoute,
   ProductBlockText,
   ProductBlockSpace,
-  ProductBlockFile,
-  ProductBlockSlider,
+  ProductBlockMediaFile,
+  ProductBlockMediaSlider,
 } from "#components"
 
 interface ICreateBlock {
@@ -35,8 +35,8 @@ blocks.set("quoute", ProductBlockQuoute)
 blocks.set("space", ProductBlockSpace)
 blocks.set("code", ProductBlockCode)
 blocks.set("list", ProductBlockList)
-blocks.set("file", ProductBlockFile)
-blocks.set("slider", ProductBlockSlider)
+blocks.set("file", ProductBlockMediaFile)
+blocks.set("slider", ProductBlockMediaSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
 

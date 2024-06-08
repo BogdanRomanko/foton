@@ -5,10 +5,10 @@ import {
   ProductBlockCode,
   ProductBlockText,
   ProductBlockSpace,
-  ProductBlockMedia,
-  ProductBlockSlider,
   ProductBlockList,
   ProductBlockQuoute,
+  ProductBlockFile,
+  ProductBlockSlider,
 } from "#components"
 
 const { blocks } = defineProps<{
@@ -26,8 +26,8 @@ function getComponent(type: string) {
     return ProductBlockCode
   } else if (type === "list") {
     return ProductBlockList
-  } else if (type === "media") {
-    return ProductBlockMedia
+  } else if (type === "file") {
+    return ProductBlockFile
   } else if (type === "slider") {
     return ProductBlockSlider
   } else if (type === "quoute") {
