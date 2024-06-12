@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import hljs from "highlight.js"
 import "highlight.js/styles/atom-one-dark.min.css"
-
-const { isEdit, content } = withDefaults(
-  defineProps<{
-    isEdit?: boolean
-    content?: string
-  }>(),
-  { isEdit: false, content: "" },
-)
+import type { IBlockInitValue } from "../../admin/constructor/index.vue"
 
 defineExpose({
   getData,
 })
 
+const { isEdit, initData } = withDefaults(
+  defineProps<{
+    isEdit?: boolean
+    initData?: IBlockInitValue
+  }>(),
+  {
+    isEdit: false,
+    initData: () => ({ content: "", productId: 0, blockId: 0 }),
+  },
+)
+
 const languages = ["JAVASCRIPT", "PHP", "PYTHON", "RUST", "JAVA"]
 const selectedLanguage = ref(languages[0])
-const code = ref(content)
+const code = ref(initData.content)
 
 const hihgtlighCode = computed(() =>
   hljs.highlight(code.value, { language: selectedLanguage.value }),
@@ -28,6 +32,8 @@ function getData() {
   return {
     type: "code",
     content: code.value,
+    ...(initData.blockId && { id: initData.blockId }),
+    ...(initData.productId && { productId: initData.productId }),
   }
 }
 

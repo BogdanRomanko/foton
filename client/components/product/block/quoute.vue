@@ -1,50 +1,76 @@
 <script setup lang="ts">
+import type { IBlockInitValue } from "../../admin/constructor/index.vue"
+
 interface IQuouteContent {
   text: string
   author: string
+}
+
+type BlockQuouteContent = Omit<IBlockInitValue, "content"> & {
+  content: IQuouteContent
 }
 
 defineExpose({
   getData,
 })
 
-const { isEdit, content } = withDefaults(
+const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: string
+    initData?: string
   }>(),
   {
     isEdit: false,
-    content: "",
+    initData: '{"content":"","productId":0,"blockId":0}',
   },
 )
+const initBlockData = parseInitData()
 
-const quouteContent: IQuouteContent = JSON.parse(content) ?? {
-  author: "",
-  text: "",
+const quoteData = reactive(initBlockData.content)
+
+function parseInitData(): BlockQuouteContent {
+  try {
+    const initBlockData: IBlockInitValue = JSON.parse(initData)
+
+    if (!initBlockData.content) throw Error
+
+    const quouteContent: IQuouteContent = JSON.parse(initBlockData.content)
+
+    const blockData: BlockQuouteContent = {
+      ...initBlockData,
+      content: quouteContent,
+    }
+
+    return blockData
+  } catch {
+    return {
+      content: {
+        author: "",
+        text: "",
+      },
+    }
+  }
 }
 
-const text = ref(quouteContent.text)
-const author = ref(quouteContent.author)
-
 function getData() {
-  if (!text.value || !author.value) return
+  if (!quoteData.text || !quoteData.author) return
 
   return {
     type: "quoute",
     content: JSON.stringify({
-      text: text.value,
-      author: author.value,
+      ...quoteData,
+      ...(initBlockData.blockId && { id: initBlockData.blockId }),
+      ...(initBlockData.productId && { productId: initBlockData.productId }),
     }),
   }
 }
 
 function onInputText(e: Event) {
-  text.value = (e.target as HTMLInputElement).innerHTML
+  quoteData.text = (e.target as HTMLInputElement).innerHTML
 }
 
 function onInputAuthor(e: Event) {
-  author.value = (e.target as HTMLInputElement).innerHTML
+  quoteData.author = (e.target as HTMLInputElement).innerHTML
 }
 </script>
 
@@ -55,14 +81,14 @@ function onInputAuthor(e: Event) {
       :placeholder="isEdit ? 'Текст цитаты' : undefined"
       :contenteditable="isEdit || undefined"
       @input="onInputText"
-      v-html="text"
+      v-html="initBlockData.content.text"
     ></p>
     <p
       :class="$style.author"
       :placeholder="isEdit ? 'Подпись' : undefined"
       :contenteditable="isEdit || undefined"
       @input="onInputAuthor"
-      v-html="author"
+      v-html="initBlockData.content.author"
     ></p>
   </blockquote>
 </template>

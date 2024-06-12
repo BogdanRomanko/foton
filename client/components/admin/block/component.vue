@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { IBlockInitValue } from "../constructor/index.vue"
 import type { VueComponent } from "@/types"
 
 const { component, dataId, initContent } = defineProps<{
   component: VueComponent
   dataId: string
-  initContent: any
+  initContent?: IBlockInitValue
 }>()
 
 const emit = defineEmits<{
@@ -19,7 +20,7 @@ const emit = defineEmits<{
       :is="component"
       :ref="(el) => emit('setBlockRef', el, dataId)"
       is-edit
-      :content="initContent"
+      :init-data="initContent"
     />
     <button class="block-btn" @click="() => emit('removeBlock', dataId)">
       X
@@ -27,10 +28,15 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .block-container {
   position: relative;
   margin: 20px 0;
+
+  a {
+    color: blue;
+    cursor: pointer;
+  }
 }
 
 .block-btn {

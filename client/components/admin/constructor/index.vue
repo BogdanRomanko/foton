@@ -12,9 +12,15 @@ import {
   ProductBlockMediaSlider,
 } from "#components"
 
+export interface IBlockInitValue {
+  content?: string
+  blockId?: number
+  productId?: number
+}
+
 interface ICreateBlock {
   component: VueComponent
-  initValue?: any
+  initValue?: IBlockInitValue
   ref?: { getData: () => IBlock }
 }
 
@@ -45,20 +51,35 @@ const createdBlocks = shallowReactive<Map<string, ICreateBlock>>(new Map())
 initBlocksList()
 function initBlocksList() {
   if (!initBlocks) return
-  initBlocks.forEach((block) => selectBlock(block.type, block.content))
+  initBlocks.forEach((block) =>
+    selectBlock(block.type, {
+      content: block.content,
+      blockId: block.id,
+      productId: block.productId,
+    }),
+  )
 }
 
 function removeBlock(key: string) {
   createdBlocks.delete(key)
 }
 
-function selectBlock(block: string, initValue?: any) {
+function selectBlock(block: string, blockPropData?: IBlockInitValue) {
   const component = blocks.get(block)
   if (!component) return
 
   const id = randomId()
 
-  createdBlocks.set(id, { component, initValue })
+  createdBlocks.set(id, {
+    component,
+    ...(blockPropData && {
+      initValue: {
+        content: blockPropData.content,
+        blockId: blockPropData.blockId,
+        productId: blockPropData.productId,
+      },
+    }),
+  })
 }
 
 const setBlockRef = (el: any, key: string) => {

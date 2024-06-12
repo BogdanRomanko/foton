@@ -8,11 +8,13 @@ interface ICard {
 const { cardData } = defineProps<{
   cardData: ICard
 }>()
+
+const url = import.meta.env.VITE_API
 </script>
 
 <template>
   <div class="products-section-content-card">
-    <img :src="`http://localhost:3000/${cardData.img}`" alt="ВИП" />
+    <img :src="`${url}/${cardData.img}`" alt="ВИП" />
     <span>{{ cardData.text }}</span>
     <NuxtLink :to="`/product/${cardData.id}`">Открыть</NuxtLink>
   </div>

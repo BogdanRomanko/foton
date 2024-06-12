@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { IBlockInitValue } from "../../../admin/constructor/index.vue"
+
 export interface IFile {
   path: string
   id: number
@@ -8,7 +10,11 @@ export type FileData = IFile | File
 
 export type MediaMap = Map<string, FileData>
 
-const { isEdit, type } = withDefaults(
+export type BlockMediaContent = Omit<IBlockInitValue, "content"> & {
+  content: string[]
+}
+
+const { isEdit, type, content } = withDefaults(
   defineProps<{
     isEdit?: boolean
     type: "file" | "slider"
@@ -23,6 +29,14 @@ defineExpose({
 
 const media = reactive<MediaMap>(new Map())
 provide("media", media)
+
+if (content && content.length > 0) {
+  content.forEach((filePath: string) => {
+    const key = randomId()
+
+    media.set(key, { path: filePath, id: 0 })
+  })
+}
 
 function getData() {
   if (!media.size) return
@@ -44,7 +58,6 @@ function getData() {
 <template>
   <ProductBlockMediaUpload v-if="isEdit" :multiple="type === 'slider'" />
   <ProductBlockMediaList />
-  {{ media }}
 </template>
 
 <style lang="scss" scoped></style>

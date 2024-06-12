@@ -1,62 +1,44 @@
-<!-- <script setup lang="ts">
-defineExpose({
-  getData,
-})
-
-const { isEdit } = withDefaults(
-  defineProps<{
-    isEdit?: boolean
-  }>(),
-  { isEdit: false },
-)
-
-const files = reactive([])
-provide("files", files)
-
-function getData() {
-  if (!files.length) return
-
-  return {
-    type: "slider",
-    content: files,
-  }
-}
-
-function getFilesListSrc() {
-  return files.map((file) => getMediaSrc(file))
-}
-</script>
-
-<template>
-  <UiFileUpload v-if="isEdit" />
-  <UCarousel
-    v-if="files.length > 0"
-    v-slot="{ item }"
-    :items="getFilesListSrc()"
-    :ui="{ item: 'basis-full md:basis-1/2 lg:basis-1/3' }"
-    arrows
-    indicators
-  >
-    <img :src="item" width="300" height="400" draggable="false" />
-  </UCarousel>
-</template>
-
-<style lang="scss" scoped></style> -->
-
 <script setup lang="ts">
+import type { IBlockInitValue } from "../../../admin/constructor/index.vue"
+import type { BlockMediaContent } from "./index.vue"
+
 defineExpose({
   getData,
 })
 
-const { isEdit, content } = withDefaults(
+const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: string[]
+    initData?: string
   }>(),
-  { isEdit: false, content: () => [] },
+  {
+    isEdit: false,
+    initData: "",
+  },
 )
 
 const media = ref()
+
+const initBlockData = parseInitData()
+
+function parseInitData(): BlockMediaContent {
+  try {
+    const initBlockData: IBlockInitValue = JSON.parse(initData)
+
+    if (!initBlockData.content) throw Error
+
+    const blockData: BlockMediaContent = {
+      ...initBlockData,
+      content: [],
+    }
+
+    return blockData
+  } catch {
+    return {
+      content: [],
+    }
+  }
+}
 
 function getData() {
   if (!media.value) return
@@ -64,6 +46,8 @@ function getData() {
   return {
     type: "slider",
     content: media.value.getData(),
+    ...(initBlockData.blockId && { id: initBlockData.blockId }),
+    ...(initBlockData.productId && { productId: initBlockData.productId }),
   }
 }
 </script>
@@ -73,7 +57,7 @@ function getData() {
     ref="media"
     type="slider"
     :is-edit="isEdit"
-    :content="content"
+    :content="initBlockData.content"
   />
 </template>
 

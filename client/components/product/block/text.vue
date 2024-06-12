@@ -1,17 +1,22 @@
 <script setup lang="ts">
+import type { IBlockInitValue } from "../../admin/constructor/index.vue"
+
 defineExpose({
   getData,
 })
 
-const { isEdit, content } = withDefaults(
+const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: string
+    initData?: IBlockInitValue
   }>(),
-  { isEdit: false, content: "" },
+  {
+    isEdit: false,
+    initData: () => ({ content: "", productId: 0, blockId: 0 }),
+  },
 )
 
-const text = ref(content)
+const text = ref(initData.content)
 
 function getData() {
   if (!text.value) return
@@ -19,6 +24,8 @@ function getData() {
   return {
     type: "text",
     content: text.value,
+    ...(initData.blockId && { id: initData.blockId }),
+    ...(initData.productId && { productId: initData.productId }),
   }
 }
 
@@ -33,7 +40,7 @@ function onKeyDown(event: any) {
   }
 }
 
-function onKeyUp(event: any) {
+function onInput(event: any) {
   text.value = event.target.innerHTML
 }
 </script>
@@ -43,8 +50,8 @@ function onKeyUp(event: any) {
     :placeholder="isEdit ? 'Введите текст' : undefined"
     :contenteditable="isEdit || undefined"
     @keydown="onKeyDown"
-    @keyup="onKeyUp"
-    v-html="content"
+    @input="onInput"
+    v-html="initData.content"
   ></p>
 </template>
 

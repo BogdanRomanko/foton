@@ -39,7 +39,7 @@ function getComponent(type: string) {
 </script>
 
 <template>
-  <template v-for="(block, id) in blocks" :key="id">
+  <template v-for="block in blocks" :key="block.id">
     <component :is="getComponent(block.type)" :content="block.content" />
   </template>
 </template>

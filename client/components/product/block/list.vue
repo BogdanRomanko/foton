@@ -1,17 +1,22 @@
 <script setup lang="ts">
+import type { IBlockInitValue } from "../../admin/constructor/index.vue"
+
 defineExpose({
   getData,
 })
 
-const { isEdit, content: initContent } = withDefaults(
+const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: string
+    initData?: IBlockInitValue
   }>(),
-  { isEdit: false, content: "<li></li>" },
+  {
+    isEdit: false,
+    initData: () => ({ content: "<li></li>", productId: 0, blockId: 0 }),
+  },
 )
 
-const content = ref(initContent)
+const content = ref(initData.content)
 
 function getData() {
   if (!content.value) return
@@ -19,6 +24,8 @@ function getData() {
   return {
     type: "list",
     content: content.value,
+    ...(initData.blockId && { id: initData.blockId }),
+    ...(initData.productId && { productId: initData.productId }),
   }
 }
 
@@ -57,8 +64,8 @@ function onKeyUp(event: any) {
     class="test"
     :class="$style.test"
     @keydown="onKeyDown"
-    @keyup="onKeyUp"
-    v-html="initContent"
+    @input="onKeyUp"
+    v-html="initData.content"
   ></ul>
 </template>
 

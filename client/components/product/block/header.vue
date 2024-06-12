@@ -1,17 +1,22 @@
 <script setup lang="ts">
+import type { IBlockInitValue } from "../../admin/constructor/index.vue"
+
 defineExpose({
   getData,
 })
 
-const { isEdit, content } = withDefaults(
+const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    content?: string
+    initData?: IBlockInitValue
   }>(),
-  { isEdit: false, content: "" },
+  {
+    isEdit: false,
+    initData: () => ({ content: "", productId: 0, blockId: 0 }),
+  },
 )
 
-const text = ref(content)
+const text = ref(initData.content)
 
 function getData() {
   if (!text.value) return
@@ -19,6 +24,8 @@ function getData() {
   return {
     type: "header",
     content: text.value,
+    ...(initData.blockId && { id: initData.blockId }),
+    ...(initData.productId && { productId: initData.productId }),
   }
 }
 
@@ -32,7 +39,7 @@ function onInput(e: Event) {
     :placeholder="isEdit ? 'Заголовок 1' : undefined"
     :contenteditable="isEdit || undefined"
     @input="onInput"
-    v-html="content"
+    v-html="initData.content"
   ></h1>
 </template>
 

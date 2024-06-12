@@ -1,7 +1,9 @@
 <script setup lang="ts">
 export interface IBlock {
   type: string
-  content: any
+  content: string
+  id: number
+  productId: number
 }
 
 export interface IProduct {
