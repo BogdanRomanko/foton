@@ -40,7 +40,14 @@ function getComponent(type: string) {
 
 <template>
   <template v-for="block in blocks" :key="block.id">
-    <component :is="getComponent(block.type)" :content="block.content" />
+    <component
+      :is="getComponent(block.type)"
+      :init-data="{
+        content: block.content,
+        productId: block.productId,
+        blockId: block.id,
+      }"
+    />
   </template>
 </template>
 

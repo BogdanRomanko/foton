@@ -1,10 +1,31 @@
 <script setup lang="ts">
-const { content } = defineProps<{
-  content: string
-}>()
+import type { IBlockInitValue } from "../../admin/constructor/index.vue"
 
-const url = import.meta.env.VITE_API
-const filesList = JSON.parse(content).map((path: string) => `${url}/${path}`)
+const { initData } = withDefaults(
+  defineProps<{
+    initData?: IBlockInitValue
+  }>(),
+  {
+    initData: () => ({ content: "", productId: 0, blockId: 0 }),
+  },
+)
+
+const filesList = parseInitData()
+
+function parseInitData(): string[] {
+  try {
+    const url = import.meta.env.VITE_API
+    if (!initData.content) throw Error
+
+    const data = JSON.parse(initData.content)
+
+    if (!data || !Array.isArray(data)) throw Error
+    const t = data.map((path: string) => `${url}/${path}`)
+    return t
+  } catch {
+    return [""]
+  }
+}
 </script>
 
 <template>

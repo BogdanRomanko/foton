@@ -9,11 +9,11 @@ defineExpose({
 const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    initData?: string
+    initData?: IBlockInitValue
   }>(),
   {
     isEdit: false,
-    initData: "",
+    initData: () => ({ content: "", productId: 0, blockId: 0 }),
   },
 )
 
@@ -23,13 +23,15 @@ const initBlockData = parseInitData()
 
 function parseInitData(): BlockMediaContent {
   try {
-    const initBlockData: IBlockInitValue = JSON.parse(initData)
+    if (!initData.content) throw Error
 
-    if (!initBlockData.content) throw Error
+    const initContentkData: string[] = JSON.parse(initData.content)
+
+    if (!Array.isArray(initContentkData)) throw Error
 
     const blockData: BlockMediaContent = {
-      ...initBlockData,
-      content: [],
+      ...initData,
+      content: initContentkData,
     }
 
     return blockData

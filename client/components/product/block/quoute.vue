@@ -17,27 +17,26 @@ defineExpose({
 const { isEdit, initData } = withDefaults(
   defineProps<{
     isEdit?: boolean
-    initData?: string
+    initData?: IBlockInitValue
   }>(),
   {
     isEdit: false,
-    initData: '{"content":"","productId":0,"blockId":0}',
+    initData: () => ({ content: "", productId: 0, blockId: 0 }),
   },
 )
+
 const initBlockData = parseInitData()
 
 const quoteData = reactive(initBlockData.content)
 
 function parseInitData(): BlockQuouteContent {
   try {
-    const initBlockData: IBlockInitValue = JSON.parse(initData)
+    if (!initData.content) throw Error
 
-    if (!initBlockData.content) throw Error
-
-    const quouteContent: IQuouteContent = JSON.parse(initBlockData.content)
+    const quouteContent: IQuouteContent = JSON.parse(initData.content)
 
     const blockData: BlockQuouteContent = {
-      ...initBlockData,
+      ...initData,
       content: quouteContent,
     }
 
@@ -57,11 +56,9 @@ function getData() {
 
   return {
     type: "quoute",
-    content: JSON.stringify({
-      ...quoteData,
-      ...(initBlockData.blockId && { id: initBlockData.blockId }),
-      ...(initBlockData.productId && { productId: initBlockData.productId }),
-    }),
+    content: JSON.stringify(quoteData),
+    ...(initBlockData.blockId && { id: initBlockData.blockId }),
+    ...(initBlockData.productId && { productId: initBlockData.productId }),
   }
 }
 

@@ -23,7 +23,7 @@ const selectedLanguage = ref(languages[0])
 const code = ref(initData.content)
 
 const hihgtlighCode = computed(() =>
-  hljs.highlight(code.value, { language: selectedLanguage.value }),
+  hljs.highlight(code.value ?? "", { language: selectedLanguage.value }),
 )
 
 function getData() {
