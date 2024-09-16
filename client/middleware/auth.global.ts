@@ -1,11 +1,17 @@
-export default defineNuxtRouteMiddleware(async () => {
-  // const accessToken = useCookie("token")
-  // const userStore = useUserStore()
-  // if (accessToken.value) {
-  //   userStore.parseToken()
-  // }
-  // if (import.meta.server) return
-  // const refreshToken = useLocalStorage("token", "")
-  // if (!accessToken.value && !refreshToken.value) return
-  // await userStore.getProfile()
+export default defineNuxtRouteMiddleware(() => {
+  const authStore = useAuthStore()
+
+  if (import.meta.server && !authStore.isAuth) {
+    authStore.initJWT()
+    return
+  }
+  const nuxtApp = useNuxtApp()
+  if (
+    import.meta.client &&
+    authStore.isAuth &&
+    nuxtApp.isHydrating &&
+    nuxtApp.payload.serverRendered
+  ) {
+    useJWTRefesh()
+  }
 })
