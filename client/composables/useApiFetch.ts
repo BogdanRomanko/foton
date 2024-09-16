@@ -4,17 +4,31 @@ import type { NitroFetchRequest } from "nitropack"
 type $FetchType = typeof $fetch
 export type ReqOptions = Parameters<$FetchType>[1]
 
+export async function useJWTRefesh() {
+  const authStore = useAuthStore()
+  try {
+    const res: any = await $fetch("user/refresh", {
+      method: "post",
+      baseURL: import.meta.env.VITE_API,
+      credentials: "include",
+    })
+    authStore.refresh(res.accessToken)
+  } catch (e) {
+    authStore.logout()
+  }
+}
+
 export function useApiFetch<T>(
   url: NitroFetchRequest,
   options: ReqOptions = {},
 ) {
   const authStore = useAuthStore()
 
-  const defaults: ReqOptions = {
+  const defaultParams: ReqOptions = {
     baseURL: import.meta.env.VITE_API,
+    credentials: "include",
     retry: 1,
     retryStatusCodes: [401],
-    credentials: "include",
     onRequest: (ctx) => {
       const token = process.client ? localStorage.getItem("token") : ""
       if (authStore.isAuth) {
@@ -23,21 +37,18 @@ export function useApiFetch<T>(
         })
       }
     },
-    onResponseError: async (ctx) => {
+  }
+
+  const fetchParams: ReqOptions = {
+    ...defaultParams,
+    onResponseError: (ctx) => {
       if (ctx.response.status === 401) {
-        try {
-          const res: any = await fetchApi("user/refresh", {
-            method: "post",
-          })
-          authStore.refresh(res.accessToken)
-        } catch (e) {
-          authStore.logout()
-        }
+        useJWTRefesh()
       }
     },
   }
 
-  const params = defu(options, defaults)
+  const params = defu(options, fetchParams)
 
   const fetchApi = $fetch.create(params)
 

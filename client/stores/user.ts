@@ -18,10 +18,9 @@ interface ITokenBody {
 export const useUserStore = defineStore("user", () => {
   const data = ref<IUser>()
   const isAdmin = computed(() => {
-    // if (!data.value) return false
+    if (!data.value) return false
 
-    // return data.value.role === Roles.Admin
-    return true
+    return data.value.role === Roles.Admin
   })
 
   const isLoading = ref(false)
