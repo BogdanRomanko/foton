@@ -46,8 +46,8 @@ model User {
 
 model Token {
   id           Int    @id @default(autoincrement())
-  user         Int
-  refreshToken String
+  user         Int @unique
+  refreshToken String @unique
 }
 
 enum Role {
