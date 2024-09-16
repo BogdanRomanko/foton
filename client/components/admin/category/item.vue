@@ -42,17 +42,21 @@ function onDelete() {
 <template>
   <div v-if="title" class="box">
     <UForm :schema="schema" :state="state" @submit="onSubmitUpdate">
-      <UFormGroup label="Название категории" name="title">
+      <UFormGroup label="Название категории" name="title" class="indentElement">
         <UInput v-model="state.title" placeholder="Название категории" />
       </UFormGroup>
-      <UButton type="submit"> Обновить </UButton>
+      <UButton type="submit" class="buttonStyle"> Обновить </UButton>
     </UForm>
-    <UButton type="submit" @click="onDelete"> Удалить </UButton>
+    <UButton type="submit" class="buttonStyle" @click="onDelete"> Удалить </UButton>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .box {
   border: 1px solid black;
+}
+
+.buttonStyle{
+  margin: 10px;
 }
 </style>

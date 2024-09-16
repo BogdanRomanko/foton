@@ -52,7 +52,7 @@ await useAsyncData(async () => {
 <style lang="scss">
 .products {
   flex-grow: 1;
-  width: 100vw;
+  width: 100%;
   text-align: center;
 
   &-section {

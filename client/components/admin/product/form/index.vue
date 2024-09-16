@@ -129,15 +129,15 @@ async function onSubmitEdit(event: FormSubmitEvent<Schema>) {
         <UTextarea v-model="state.description" />
       </UFormGroup>
 
-      <UFormGroup label="Лого" name="image">
+      <UFormGroup label="Логотип" name="image">
         <AdminProductFormImage :image="productData?.image" />
       </UFormGroup>
 
-      <UFormGroup label="Category" name="categoryId">
+      <UFormGroup label="Категория" name="categoryId">
         <USelectMenu
           v-model="state.categoryId"
           :options="categoryStore.data"
-          placeholder="Select categories"
+          placeholder="Выберите категорию"
           value-attribute="id"
           option-attribute="title"
         />

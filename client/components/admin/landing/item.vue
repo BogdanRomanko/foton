@@ -38,10 +38,10 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   <div class="">
     <div v-if="data" class="static-form">
       <UForm :schema="schema" :state="state" @submit="onSubmit">
-        <UFormGroup :label="`Введите ${data.title}`" name="content">
+        <UFormGroup :label="`Введите ${data.title}`" name="content" class="indentElement">
           <UInput v-model="state.content" :placeholder="data.title" />
         </UFormGroup>
-        <UButton type="submit"> Измените </UButton>
+        <UButton type="submit"> Изменить </UButton>
       </UForm>
     </div>
   </div>
@@ -51,5 +51,8 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 .static-form {
   border: 1px solid black;
   padding: 15px;
+}
+.indentElement{
+  margin-bottom: 10px;
 }
 </style>

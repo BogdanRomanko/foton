@@ -33,4 +33,12 @@
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .content-about{
+    h3{
+      font-weight: bold;
+      margin: 0px 0px 10px 0px;
+      font-size: 22px;
+    }
+  }
+</style>

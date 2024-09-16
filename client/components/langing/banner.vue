@@ -33,11 +33,11 @@
   &-info {
     background-color: rgba(230, 230, 230, 0.839);
     color: black;
-    padding: 10px;
+    padding: 30px;
     position: relative;
     top: -300px;
     left: 20px;
-    width: 400px;
+    width: 450px;
     font-size: 20px;
     text-align: center;
 
@@ -65,7 +65,7 @@
     }
 
     &-info {
-      top: -250px;
+      top: -240px;
       left: 0px;
       width: 95%;
     }
@@ -85,7 +85,27 @@
     }
 
     &-info {
-      top: -450px;
+      top: -440px;
+      left: 0px;
+      width: 95%;
+    }
+  }
+}
+
+@media only screen and (max-width: 300px) {
+  .banner {
+    width: 100vw;
+    max-width: 100%;
+    height: 450px;
+
+    img {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+    }
+
+    &-info {
+      top: -590px;
       left: 0px;
       width: 95%;
     }

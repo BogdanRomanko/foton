@@ -8,4 +8,13 @@
   <LangingContentDirectionList />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .content-since-directions{
+    margin: 10px 0px 0px 0px;
+
+    h3{
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+</style>
