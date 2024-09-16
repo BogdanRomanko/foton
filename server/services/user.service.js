@@ -1,6 +1,6 @@
 const userModel = require('../models/user.model')
 const apiError = require('../exceptions/server.error')
-const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 const tokenService = require('./token.service')
 
 class UserService {
@@ -18,9 +18,9 @@ class UserService {
     }
 
     async registration(name, password, role) {
-        const hashPassword = this.hashPassword(password)
+        const hashPassword = await this.hashPassword(password)
 
-        await userModel.registration(name, hashPassword.hash, hashPassword.salt, role)
+        await userModel.registration(name, hashPassword, "", role)
 
         const user = await userModel.getUserByName(name)
 
@@ -32,6 +32,7 @@ class UserService {
 
     async login(name, password) {
         try {
+
             const user = await userModel.getUserByName(name)
 
 
@@ -39,11 +40,10 @@ class UserService {
             if (!user)
                 throw new apiError(404, `User with name "${name}" not found`)
 
-            const hashPassword = this.hashPassword(password)
-                console.log('test', user, password, hashPassword)
+            const passwordEquals = await bcrypt.compare(password, user.hash)
 
 
-            if (user.hash === hashPassword.hash) {
+            if (passwordEquals) {
                 const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
                 await tokenService.saveToken(user.id, tokens.refreshToken)
 
@@ -65,15 +65,16 @@ class UserService {
         if (!userData || !tokenDB)
             throw apiError.UnauthorizedError()
 
-        const user = await userModel.getUserById(userData.id)
+        const user = await userModel.getUserById(userData.payload.userId)
         const tokens = await tokenService.generateTokens({userId: user.id, userName: user.name, role: user.role})
+        await tokenService.saveToken(user.id, tokens.refreshToken)
 
         return tokens
     }
 
     async logout(token) {
         if (!token)
-            throw apiError.UnauthorizedError()
+            return false
 
         await tokenService.removeToken(token)
 
@@ -117,11 +118,12 @@ class UserService {
         return tokens
     }
 
-    hashPassword(password) {
-        const salt = crypto.randomBytes(16).toString('hex')
-        const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
-
-        return {hash, salt}
+    async hashPassword(password) {
+        const hashPasswort = await bcrypt.hash(
+            password,
+            parseInt(process.env.BCRYPT_SALT),
+          )
+          return hashPasswort
     }
 
 }
