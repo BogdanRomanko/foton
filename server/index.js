@@ -3,6 +3,7 @@ const app = express()
 const port = process.env.PORT
 const url = process.env.SITE_URL
 const path = require('path')
+const cookieParser = require('cookie-parser')
 
 const cors = require('cors')
 const userRouter = require('./routes/user.routes')
@@ -11,6 +12,7 @@ const sertificateRouter = require('./routes/sertificates.routes')
 const categoriesRouter = require('./routes/categories.routes')
 const productRouter = require('./routes/product.routes')
 
+
 app.use( cors({
   credentials: true,
   origin: process.env.CLIENT_URL,
@@ -18,6 +20,7 @@ app.use( cors({
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/user', userRouter)
 app.use('/content', contentRouter)

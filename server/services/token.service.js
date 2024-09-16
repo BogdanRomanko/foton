@@ -48,7 +48,7 @@ class TokenService {
         const tokenData = await tokenModel.getTokenByUser(parseInt(userId))
 
         if (tokenData) {
-            return await tokenModel.updateToken(parseInt(userId), refreshToken) 
+            return await tokenModel.updateToken(parseInt(userId), refreshToken)
         }
 
         return await tokenModel.createToken(userId, refreshToken)
@@ -56,12 +56,7 @@ class TokenService {
 
     async removeToken(refreshToken) {
         const tokenData = await tokenModel.deleteToken(refreshToken)
-
-        if (!tokenData) {
-            throw new apiError.UnauthorizedError()
-        }
-        
-        return tokenData
+        return !!tokenData
     }
 
 }

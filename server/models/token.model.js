@@ -2,7 +2,7 @@ const PrismaClient = require('@prisma/client').PrismaClient
 const client = new PrismaClient()
 
 class TokenModel {
-    
+
     async createToken(userId, refreshToken) {
         try {
             await client.$connect()
@@ -29,7 +29,7 @@ class TokenModel {
                     refreshToken: refreshToken
                 },
                 select: {
-                    refreshToken
+                    refreshToken: true
                 }
             })
             await client.$disconnect()
@@ -44,12 +44,12 @@ class TokenModel {
     async getTokenByUser(userId) {
         try {
             await client.$connect()
-            const token = await client.token.findUnique({
+            const token = await client.token.findFirst({
                 where: {
                     user: userId
                 },
                 select: {
-                    refreshToken
+                    refreshToken: true
                 }
             })
             await client.$disconnect()

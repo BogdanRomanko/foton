@@ -133,6 +133,7 @@ class UserController {
 
     async refresh(req, res, next) {
         try {
+            debugger
             const { JWTRefreshToken } = req.cookies
             const userData = await userService.refresh(JWTRefreshToken)
 
@@ -146,6 +147,22 @@ class UserController {
             next(e)
         }
     }
+
+    async logout(req, res, next) {
+        try {
+            debugger
+          const { JWTRefreshToken } = req.cookies
+
+          const resLogout = await userService.logout(JWTRefreshToken)
+
+          console.log('resLogout', resLogout)
+
+          res.clearCookie("JWTRefreshToken")
+          return res.json(resLogout)
+        } catch (e) {
+          next(e)
+        }
+      }
 }
 
 module.exports = new UserController()
