@@ -1,9 +1,39 @@
-<script setup lang="ts">
+<script setup>
+import { onMounted } from 'vue'; 
+
+onMounted(() => {
+  
+})
+
 const langingStore = useLangingStore()
 const userStore = useUserStore()
+
+  function hamburgerClickEvent() {
+    const hamburgerButton = document.getElementById("header-nav-hamburger-icon")
+    if (hamburgerButton.classList.contains("fa-bars")) {
+      //activation
+      hamburgerButton.classList.remove("fa-bars");
+      hamburgerButton.classList.add("fa-times");
+
+      document
+        .getElementsByClassName("header-nav")[0]
+        .classList.add("header-nav-activation");
+    } else {
+      //deactivation
+      hamburgerButton.classList.add("fa-bars");
+      hamburgerButton.classList.remove("fa-times");
+
+      document
+        .getElementsByClassName("header-nav")[0]
+        .classList.remove("header-nav-activation");
+    }
+  }
+
 </script>
 
 <template>
+  <link rel="stylesheet" 
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <header class="header">
     <div class="header-top">
       <div class="header-logo">
@@ -22,9 +52,10 @@ const userStore = useUserStore()
       </div>
     </div>
     <div class="header-nav">
-      <span class="header-nav-hamburger" onclick="hamburgerClickEvent()">
+      <span class="header-nav-hamburger" @click="hamburgerClickEvent">
         <i
           id="header-nav-hamburger-icon"
+          ref="hamburgerButton"
           class="fa fa-bars"
           aria-hidden="true"
         ></i>
@@ -161,7 +192,7 @@ const userStore = useUserStore()
       display: grid;
       grid-template-columns: 50px 1fr;
       width: 95vw;
-      height: 120px;
+      height: 160px;
       margin: 5px auto;
 
       overflow: hidden;
@@ -249,7 +280,7 @@ const userStore = useUserStore()
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 450px) {
   .header {
     display: flex;
     flex-direction: column;

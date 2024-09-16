@@ -52,5 +52,6 @@
 
 .workspace {
   min-width: 80%;
+  margin: 10px;
 }
 </style>

@@ -29,10 +29,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   </p>
 
   <div class="">
-    <div class="">
+    <div class="category-add">
       <h3>Добавление категории</h3>
       <UForm :schema="schema" :state="state" @submit="onSubmit">
-        <UFormGroup label="Введите название категории" name="title">
+        <UFormGroup label="Введите название категории" name="title" class="intentElement">
           <UInput v-model="state.title" placeholder="Название категории" />
         </UFormGroup>
         <UButton type="submit"> Добавить </UButton>
@@ -41,4 +41,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .category-add{
+    h3{
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+  .intentElement{
+    margin-bottom: 10px;
+  }
+</style>

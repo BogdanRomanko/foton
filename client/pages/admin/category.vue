@@ -6,9 +6,18 @@ definePageMeta({
 </script>
 
 <template>
-  <div>category</div>
-  <AdminCategoryAdd />
-  <AdminCategoryList />
+  <div class="admin-category">
+    <h3>Категории</h3>
+    <AdminCategoryAdd />
+    <AdminCategoryList />
+  </div>
+  
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.admin-category{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>

@@ -10,7 +10,7 @@ function onReset() {
   <div class="container">
     <ProductsFilterSearch />
     <ProductsFilterCategories />
-    <UButton @click="onReset">reset</UButton>
+    <UButton @click="onReset">Поиск</UButton>
   </div>
 </template>
 
@@ -18,5 +18,8 @@ function onReset() {
 .container {
   width: 400px;
   margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

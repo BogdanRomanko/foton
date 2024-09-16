@@ -26,4 +26,11 @@ const langingStore = useLangingStore()
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .content-map-info{
+    h3{
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+</style>

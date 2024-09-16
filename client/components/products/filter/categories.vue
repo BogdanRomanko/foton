@@ -49,7 +49,7 @@ watch(
   <USelectMenu
     v-model="selectedId"
     :options="categoryStore.data"
-    placeholder="Select categories"
+    placeholder="Выберите категорию"
     value-attribute="id"
     option-attribute="title"
     @close="onSelect"

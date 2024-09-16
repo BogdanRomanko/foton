@@ -33,8 +33,8 @@ watch(
 
 <template>
   <div>
-    <UFormGroup label="Title">
-      <UInput v-model="searchData" placeholder="Search post..." />
+    <UFormGroup label="Фильтр поиска">
+      <UInput v-model="searchData" placeholder="Введите наименование..." />
     </UFormGroup>
   </div>
 </template>
