@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { object, string, type InferType, mixed, number } from "yup"
-import type { FormSubmitEvent } from "#ui/types"
 import type { IProduct } from "../../../../pages/product/[id].vue"
+import type { FormSubmitEvent } from "#ui/types"
 
 const productStore = useProductStore()
 const categoryStore = useCategoryStore()

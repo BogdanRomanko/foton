@@ -192,7 +192,7 @@ class ProductController {
         block.productId = productId;
       });
 
-      const blocks = await blocksService.updateBlocks(req.body.blocks);
+      const blocks = await blocksService.updateBlocks(req.body.blocks, productId);
       data.blocks = blocks;
 
       res.json(data);
@@ -270,11 +270,11 @@ class ProductController {
       const schema = Joi.object({
         id: Joi.number().required(),
       });
-      const { error } = schema.validate(req.query);
+      const { error } = schema.validate(req.params);
 
       if (error) throw apiError.HttpException(error.details[0].message);
 
-      const data = await blocksService.deleteBlock(req.query.id);
+      const data = await blocksService.deleteBlock(req.params.id);
 
       res.json(data);
     } catch (e) {

@@ -16,7 +16,7 @@ router.post('/saveImage', upload.single('image'), productController.saveImage)
 router.delete('/delete/:id', productController.deleteProduct)
 router.delete('/deleteMany', productController.deleteProducts)
 router.delete('/deleteImage/:id', productController.deleteImage)
-router.delete('/deleteBlock', productController.deleteBlock)
+router.delete('/deleteBlock/:id', productController.deleteBlock)
 
 router.put('/update', upload.single('image'), productController.updateProduct)
 

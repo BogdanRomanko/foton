@@ -81,7 +81,7 @@ class BlocksModel {
   async deleteBlock(blockId) {
     try {
       await client.$connect();
-      const block = await client.productBlocks.findUnique({
+      const block = await client.productBlocks.delete({
         where: {
           id: blockId,
         },

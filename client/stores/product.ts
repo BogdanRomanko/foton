@@ -211,6 +211,18 @@ export const useProductStore = defineStore("product", () => {
     }
   }
 
+  async function removeBlock(id: number) {
+    try {
+      await useApiFetch(`products/deleteBlock/${id}`, {
+        method: "DELETE",
+      })
+      return true
+    } catch {
+      error.value = "Ошибка при удаленнии блока"
+      return false
+    }
+  }
+
   return {
     data,
     count,
@@ -225,6 +237,7 @@ export const useProductStore = defineStore("product", () => {
     fetchByCategory,
     add,
     edit,
+    removeBlock,
     $reset,
   }
 })

@@ -21,7 +21,7 @@ class BlocksService {
             if (block.type === 'media')
                 imagesService.deleteImages(parseInt(block.id))
         })
-        
+
         return await blockModel.deleteBlocks(parseInt(productId))
     }
 
@@ -49,8 +49,8 @@ class BlocksService {
         return await blockModel.updateBlock(parseInt(id), type, content, parseInt(productId))
     }
 
-    async updateBlocks(data) {
-        return await blockModel.updateBlocks(data)
+    async updateBlocks(data, productId) {
+        return await blockModel.updateBlocks(data, productId)
     }
 }
 

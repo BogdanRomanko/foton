@@ -45,8 +45,9 @@ blocks.set("file", ProductBlockMediaFile)
 blocks.set("slider", ProductBlockMediaSlider)
 
 const blocksKeys: string[] = [...blocks.keys()]
-
 const createdBlocks = shallowReactive<Map<string, ICreateBlock>>(new Map())
+
+const productStore = useProductStore()
 
 initBlocksList()
 function initBlocksList() {
@@ -61,6 +62,10 @@ function initBlocksList() {
 }
 
 function removeBlock(key: string) {
+  const block = createdBlocks.get(key)
+  const blockId = block.initValue.blockId
+  productStore.removeBlock(blockId)
+
   createdBlocks.delete(key)
 }
 
